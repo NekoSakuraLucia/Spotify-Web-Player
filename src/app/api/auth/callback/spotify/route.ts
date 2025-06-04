@@ -20,29 +20,13 @@ type CallbackParam = Record<AuthorzationQuery, string>;
 
 // ประเภทสำหรับการตอบสนองข้อมูลหลังจากยิงไปที่ Spotify API
 interface IResponseData {
-    token_type: string;
     access_token: string;
-    scope: string;
     expires_in: number;
-}
-
-// ประเภทสำหรับการส่งออกค่าตอบสนองต่อ Spotify API
-interface INextResponseToken {
-    token_type: string;
-    access_token: string;
-    scope: string;
-    expires_in: number;
-}
-
-// ประเภทสำหรับการส่งออกค่าตอบสนองข้อมูลทั่วไป
-interface INextResponseData {
-    message: string;
-    error?: string;
 }
 
 export async function GET(
     request: NextRequest
-): Promise<NextResponse<INextResponseToken> | NextResponse<INextResponseData>> {
+): Promise<NextResponse<unknown>> {
     const searchParams = request.nextUrl.searchParams;
     const code = searchParams.get('code') as string;
 
@@ -74,27 +58,19 @@ export async function GET(
             }
         );
 
-        const { token_type, access_token, scope, expires_in }: IResponseData =
-            response.data;
-        const responseData = NextResponse.json(
-            {
-                token_type,
-                access_token,
-                scope,
-                expires_in,
-            },
-            { status: 200 }
-        );
+        const { access_token, expires_in }: IResponseData = response.data;
+        const redirectURL = new URL('/', request.nextUrl.origin);
+        const redirectResponse = NextResponse.redirect(redirectURL);
 
-        responseData.cookies.set(COOKIES_NAME, access_token, {
+        redirectResponse.cookies.set(COOKIES_NAME, access_token, {
             httpOnly: true,
             secure: process.env.NODE_ENV === 'production',
             path: '/',
-            maxAge: 60 * 60,
+            maxAge: expires_in,
             sameSite: 'lax',
         });
 
-        return responseData;
+        return redirectResponse;
     } catch (error) {
         console.error(error);
         return NextResponse.json(
