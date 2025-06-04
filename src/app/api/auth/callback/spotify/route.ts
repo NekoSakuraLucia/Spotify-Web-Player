@@ -21,12 +21,21 @@ type CallbackParam = Record<AuthorzationQuery, string>;
 // ประเภทสำหรับการตอบสนองข้อมูลหลังจากยิงไปที่ Spotify API
 interface IResponseData {
     access_token: string;
+    token_type: string;
+    scope: string;
     expires_in: number;
+    refresh_token: string;
+}
+
+// ประเภทสำหรับการตอบสนองทั่วไป
+interface IResponse {
+    message: string;
+    error?: string;
 }
 
 export async function GET(
     request: NextRequest
-): Promise<NextResponse<unknown>> {
+): Promise<NextResponse<IResponse> | NextResponse<unknown>> {
     const searchParams = request.nextUrl.searchParams;
     const code = searchParams.get('code') as string;
 
@@ -44,7 +53,7 @@ export async function GET(
     };
 
     try {
-        const response = await axios.post(
+        const response = await axios.post<IResponseData>(
             `${base_uri.spotify.accounts_uri}/api/token`,
             qs.stringify(queryParam),
             {
@@ -58,7 +67,7 @@ export async function GET(
             }
         );
 
-        const { access_token, expires_in }: IResponseData = response.data;
+        const { access_token, expires_in } = response.data;
         const redirectURL = new URL('/', request.nextUrl.origin);
         const redirectResponse = NextResponse.redirect(redirectURL);
 
