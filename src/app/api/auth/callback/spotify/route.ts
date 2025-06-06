@@ -1,7 +1,15 @@
+// Next
+import { NextRequest, NextResponse } from 'next/server';
+
+// axios && querystring
 import axios from 'axios';
 import qs from 'querystring';
+
+// BASE URI
 import { base_uri } from '@/lib/base.api';
-import { NextRequest, NextResponse } from 'next/server';
+
+// Type
+import type { IResponse, IResponseData, CallbackParam } from '@/types/spotify';
 
 // Client ID
 const CLIENT_ID = process.env.SPOTIFY_CLIENT_ID as string;
@@ -11,27 +19,6 @@ const CLIENT_SECRET = process.env.SPOTIFY_CLIENT_SECRET as string;
 const REDIRECT_URI = process.env.SPOTIFY_REDIRECT_URI as string;
 // Cookies Name
 const COOKIES_NAME = process.env.SPOTIFY_CALLBACK_COOKIES as string;
-
-// ปรเภทสำหรับพารามิเตอร์แบบสอบถามการอนุญาต
-type AuthorzationQuery = 'code' | 'redirect_uri' | 'grant_type';
-
-// ประเภทสำหรับพารามิเตอร์การโทรกลับ
-type CallbackParam = Record<AuthorzationQuery, string>;
-
-// ประเภทสำหรับการตอบสนองข้อมูลหลังจากยิงไปที่ Spotify API
-interface IResponseData {
-    access_token: string;
-    token_type: string;
-    scope: string;
-    expires_in: number;
-    refresh_token: string;
-}
-
-// ประเภทสำหรับการตอบสนองทั่วไป
-interface IResponse {
-    message: string;
-    error?: string;
-}
 
 export async function GET(
     request: NextRequest

@@ -8,8 +8,8 @@ import axios, { AxiosError } from 'axios';
 // Action
 import { SpotifyLogout } from '@/actions/CookiesAction';
 
-// Type
-import type { SpotifyUserProfile } from '@/app/api/spotify/me/route';
+// Types
+import type { SpotifyUserProfile } from '@/types/spotify';
 
 export type UserContextProvider = {
     user: SpotifyUserProfile | null;

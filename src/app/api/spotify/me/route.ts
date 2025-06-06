@@ -1,56 +1,18 @@
-import axios from 'axios';
-import { cookies } from 'next/headers';
+// Next
 import { NextResponse } from 'next/server';
+import { cookies } from 'next/headers';
 
+// axios
+import axios from 'axios';
+
+// BASE_URI
 import { base_uri } from '@/lib/base.api';
+
+// Error
 import { getUserError } from '@/error/GetUser.error';
 
-// ประเภทสำหรับการตอบสนองทั่วไป
-interface IResponse {
-    message: string;
-    error?: string;
-}
-
-// ประเภทสำหรับข้อมูลโปรไฟล์ผู้ใช้ Spotify
-export interface SpotifyUserProfile {
-    country: string;
-    display_name: string;
-    email: string;
-    explicit_content: ExplicitContent;
-    external_urls: ExternalUrls;
-    followers: Followers;
-    href: string;
-    id: string;
-    images: Image[];
-    product: string;
-    type: string;
-    uri: string;
-}
-
-// ประเภทสำหรับการกรองเนื้อหาโดยชัดแจ้ง
-interface ExplicitContent {
-    filter_enabled: boolean;
-    filter_locked: boolean;
-}
-
-// ประเภทสำหรับ URL ภายนอก
-interface ExternalUrls {
-    spotify: string;
-}
-
-// ประเภทสำหรับผู้ติดตาม
-interface Followers {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    href: any;
-    total: number;
-}
-
-// ประเภทสำหรับรูปภาพโปรไฟล์
-interface Image {
-    height: number;
-    url: string;
-    width: number;
-}
+// Type
+import type { IResponse, SpotifyUserProfile } from '@/types/spotify';
 
 export async function GET(): Promise<
     NextResponse<IResponse> | NextResponse<SpotifyUserProfile>
