@@ -24,7 +24,7 @@ export async function GET(): Promise<
     if (!token) {
         return NextResponse.json(
             { message: 'ไม่พบ token กรุณาเข้าสู่ระบบก่อน' },
-            { status: 400 }
+            { status: 401 }
         );
     }
 
