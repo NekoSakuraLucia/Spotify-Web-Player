@@ -1,55 +1,29 @@
-import axios from 'axios';
+// Next
 import { cookies } from 'next/headers';
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
+
+// Axios
+import axios from 'axios';
 
 // BASE_URI
 import { base_uri } from '@/lib/base.api';
+
+// Error
 import { getArtistsErorr } from '@/error/GetArtists.error';
 
 // Types
-export interface SpotifyUserArtists {
-    items: ArtistsItem[];
-    total: number;
-    limit: number;
-    offset: number;
-    href: string;
-    next: string;
-    previous: string | null;
-}
+import type { IResponse } from '@/types/spotify';
+import type { SpotifyUserArtists } from '@/types/spotify_artists';
 
-export interface ArtistsItem {
-    external_urls: ArtitstsExternalUrls;
-    followers: ArtistsFollowers;
-    genres: string[];
-    href: string;
-    id: string;
-    images: ArtistsImage[];
-    name: string;
-    popularity: number;
-    type: string;
-    uri: string;
-}
-
-export interface ArtitstsExternalUrls {
-    spotify: string;
-}
-
-export interface ArtistsFollowers {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    href: any;
-    total: number;
-}
-
-export interface ArtistsImage {
-    height: number;
-    url: string;
-    width: number;
-}
-
-export async function GET() {
+export async function GET(
+    req: NextRequest
+): Promise<NextResponse<IResponse> | NextResponse<SpotifyUserArtists>> {
     const CookiesStore = await cookies();
     const COOKIES_NAME = process.env.SPOTIFY_CALLBACK_COOKIES as string;
     const token = CookiesStore.get(COOKIES_NAME)?.value;
+
+    const searchParams = req.nextUrl.searchParams;
+    const limitQuery = searchParams.get('limit');
 
     if (!token) {
         return NextResponse.json(
@@ -60,7 +34,9 @@ export async function GET() {
 
     try {
         const response = await axios.get<SpotifyUserArtists>(
-            `${base_uri.spotify.original_uri}/me/top/artists`,
+            `${base_uri.spotify.original_uri}/me/top/artists${
+                limitQuery ? `?limit=${limitQuery}` : ''
+            }`,
             {
                 headers: {
                     Authorization: `Bearer ${token}`,
