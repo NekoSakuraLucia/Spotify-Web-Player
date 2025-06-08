@@ -8,7 +8,7 @@ import { FaSpotify } from 'react-icons/fa';
 
 const Login = () => {
     const handleLogin = () => {
-        return SpotifyAuth();
+        SpotifyAuth();
     };
 
     return (
