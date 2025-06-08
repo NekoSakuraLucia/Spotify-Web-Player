@@ -15,11 +15,13 @@ import { getArtistsErorr } from '@/error/GetArtists.error';
 import type { IResponse } from '@/types/spotify';
 import type { SpotifyUserArtists } from '@/types/spotify_artists';
 
+// Cookie Name
+const COOKIES_NAME = process.env.SPOTIFY_CALLBACK_COOKIES as string;
+
 export async function GET(
     req: NextRequest
 ): Promise<NextResponse<IResponse> | NextResponse<SpotifyUserArtists>> {
     const CookiesStore = await cookies();
-    const COOKIES_NAME = process.env.SPOTIFY_CALLBACK_COOKIES as string;
     const token = CookiesStore.get(COOKIES_NAME)?.value;
 
     const searchParams = req.nextUrl.searchParams;

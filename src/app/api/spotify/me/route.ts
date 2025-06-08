@@ -14,11 +14,13 @@ import { getUserError } from '@/error/GetUser.error';
 // Type
 import type { IResponse, SpotifyUserProfile } from '@/types/spotify';
 
+// Cookie Name
+const COOKIES_NAME = process.env.SPOTIFY_CALLBACK_COOKIES as string;
+
 export async function GET(): Promise<
     NextResponse<IResponse> | NextResponse<SpotifyUserProfile>
 > {
     const Cookies = await cookies();
-    const COOKIES_NAME = process.env.SPOTIFY_CALLBACK_COOKIES as string;
     const token = Cookies.get(COOKIES_NAME)?.value;
 
     if (!token) {
