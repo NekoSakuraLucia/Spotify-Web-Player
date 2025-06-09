@@ -23,6 +23,7 @@ import {
 } from '@/components/ui/hover-card';
 
 import { UserProfile } from '@/components/players/spotify/UserProfile';
+import { Currently_Playing } from '@/components/players/spotify/Currently-Playing';
 
 // Icon
 import { PlayIcon } from 'lucide-react';
@@ -58,16 +59,14 @@ const Home = () => {
     useEffect(() => {
         const fetchArtists = async () => {
             const result = await TopArtists();
-            if (result.success) {
-                if (result.result) {
-                    setArtistsData(result.result);
-                } else {
-                    setArtistsData(null);
-                    console.log('No artists data found');
-                }
+            if (result.success && result.result) {
+                setArtistsData(result.result);
             } else {
                 setArtistsData(null);
-                console.log('Failed to fetch artists:', result.message);
+                const errorMessage = result.success
+                    ? 'ไม่พบข้อมูลศิลปิน'
+                    : `เกิดข้อผิดพลาดในการดึงข้อมูลศิลปิน: ${result.message}`;
+                console.log(errorMessage);
             }
         };
 
@@ -258,6 +257,8 @@ const Home = () => {
                     </div>
                 </div>
             </ScrollArea>
+
+            <Currently_Playing />
         </>
     );
 };
