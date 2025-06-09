@@ -15,6 +15,7 @@ const AuthScope = [
     'user-read-email',
     'user-top-read',
     'user-read-currently-playing',
+    'user-read-playback-state',
 ] as const;
 
 export default async function SpotifyAuth(): Promise<never> {
