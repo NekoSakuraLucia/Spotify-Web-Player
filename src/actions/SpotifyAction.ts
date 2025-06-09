@@ -4,14 +4,15 @@ import axios, { AxiosError } from 'axios';
 
 // Types
 import type { SpotifyUserArtists } from '@/types/spotify_artists';
-
-interface IArtistsResponse {
+interface IActionResponse<Types> {
     success: boolean;
     message?: string;
-    result?: SpotifyUserArtists;
+    result?: Types;
 }
 
-export async function TopArtists(): Promise<IArtistsResponse> {
+export async function TopArtists(): Promise<
+    IActionResponse<SpotifyUserArtists>
+> {
     try {
         const response = await axios.get<SpotifyUserArtists>(
             '/api/spotify/me/top/artists?limit=3'
