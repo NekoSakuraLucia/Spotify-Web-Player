@@ -20,7 +20,7 @@ const UserProfile = ({ user, logout }: UserProfileProps) => {
     return (
         <Card className='backdrop-blur-md bg-white/5 border border-white/10 shadow-xl mb-8 w-full max-w-md hover:bg-white/10 transition-all duration-300'>
             <CardContent className='flex items-center gap-4 p-4'>
-                {user.images && user.images[0] && (
+                {user.images?.[0] && (
                     <img
                         src={user.images[0].url}
                         alt={user.display_name}
