@@ -8,7 +8,8 @@ import axios from 'axios';
 // BASE_URI
 import { base_uri } from '@/lib/base.api';
 
-// Type
+// Types
+import type { IResponse } from '@/types/spotify';
 import type { SpotifyDevices } from '@/types/spotify_devices';
 
 // Error
@@ -17,7 +18,9 @@ import { getDevicesError } from '@/error/GetDevices.error';
 // Cookie Name
 const COOKIES_NAME = process.env.SPOTIFY_CALLBACK_COOKIES as string;
 
-export async function GET() {
+export async function GET(): Promise<
+    NextResponse<IResponse> | NextResponse<SpotifyDevices>
+> {
     const CookiesStore = await cookies();
     const token = CookiesStore.get(COOKIES_NAME)?.value;
 
@@ -38,7 +41,18 @@ export async function GET() {
             }
         );
 
-        return NextResponse.json(response.data);
+        const result = response.data;
+        if (result.devices.length > 0) {
+            return NextResponse.json(result);
+        }
+
+        return NextResponse.json(
+            {
+                message:
+                    'ไม่พบอุปกรณ์ Spotify กรุณาเปิด Spotify บนอุปกรณ์ของคุณก่อน',
+            },
+            { status: 404 }
+        );
     } catch (error) {
         if (axios.isAxiosError(error) && error.response) {
             const ErrorStatus = error.response.status;
