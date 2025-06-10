@@ -48,7 +48,7 @@ export async function GET(): Promise<
 
         return NextResponse.json(
             { message: 'ไม่พบเพลงที่กำลังเล่นอยู่' },
-            { status: 200 }
+            { status: 404 }
         );
     } catch (error) {
         if (axios.isAxiosError(error) && error.response) {
