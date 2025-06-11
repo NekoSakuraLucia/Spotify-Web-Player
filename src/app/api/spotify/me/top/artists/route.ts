@@ -19,7 +19,7 @@ import type { SpotifyUserArtists } from '@/types/spotify_artists';
 const COOKIES_NAME = process.env.SPOTIFY_CALLBACK_COOKIES as string;
 
 export async function GET(
-    req: NextRequest
+    req: NextRequest,
 ): Promise<NextResponse<IResponse> | NextResponse<SpotifyUserArtists>> {
     const CookiesStore = await cookies();
     const token = CookiesStore.get(COOKIES_NAME)?.value;
@@ -30,7 +30,7 @@ export async function GET(
     if (!token) {
         return NextResponse.json(
             { message: 'ไม่พบ token กรุณาเข้าสู่ระบบก่อน' },
-            { status: 401 }
+            { status: 401 },
         );
     }
 
@@ -43,7 +43,7 @@ export async function GET(
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },
-            }
+            },
         );
 
         return NextResponse.json(response.data);
@@ -53,7 +53,7 @@ export async function GET(
             const ErrorMessage = getArtistsErorr(ErrorStatus);
             return NextResponse.json(
                 { message: ErrorMessage },
-                { status: ErrorStatus }
+                { status: ErrorStatus },
             );
         } else if (error instanceof Error) {
             return NextResponse.json(
@@ -61,7 +61,7 @@ export async function GET(
                     message: 'Internal Server Error',
                     error: error ? error.message : 'Unknow Error',
                 },
-                { status: 500 }
+                { status: 500 },
             );
         }
 
@@ -70,7 +70,7 @@ export async function GET(
                 message:
                     'เกิดข้อผิดพลาดในการดึงข้อมูลศิลปิน กรุณาลองใหม่อีกครั้ง',
             },
-            { status: 500 }
+            { status: 500 },
         );
     }
 }

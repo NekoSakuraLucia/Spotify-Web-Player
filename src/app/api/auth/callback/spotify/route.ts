@@ -21,7 +21,7 @@ const REDIRECT_URI = process.env.SPOTIFY_REDIRECT_URI as string;
 const COOKIES_NAME = process.env.SPOTIFY_CALLBACK_COOKIES as string;
 
 export async function GET(
-    request: NextRequest
+    request: NextRequest,
 ): Promise<NextResponse<IResponse> | NextResponse<unknown>> {
     const searchParams = request.nextUrl.searchParams;
     const code = searchParams.get('code') as string;
@@ -29,7 +29,7 @@ export async function GET(
     if (!code) {
         return NextResponse.json(
             { message: 'ไม่พบ code ที่ส่งมา' },
-            { status: 400 }
+            { status: 400 },
         );
     }
 
@@ -48,10 +48,10 @@ export async function GET(
                     Authorization:
                         'Basic ' +
                         Buffer.from(`${CLIENT_ID}:${CLIENT_SECRET}`).toString(
-                            'base64'
+                            'base64',
                         ),
                 },
-            }
+            },
         );
 
         const { access_token, expires_in } = response.data;
@@ -74,7 +74,7 @@ export async function GET(
                 message: 'Internal Server Error',
                 error: error instanceof Error ? error.message : 'Unknow Error',
             },
-            { status: 500 }
+            { status: 500 },
         );
     }
 }

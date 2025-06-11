@@ -36,9 +36,8 @@ const UserProvider = ({
             if (!tokenValue) return;
 
             try {
-                const response = await axios.get<SpotifyUserProfile>(
-                    '/api/spotify/me'
-                );
+                const response =
+                    await axios.get<SpotifyUserProfile>('/api/spotify/me');
 
                 const data = response.data;
                 setUserData(data);
@@ -50,7 +49,7 @@ const UserProvider = ({
                 } else if (error instanceof Error) {
                     console.error(
                         'เกิดข้อผิดพลาดในระหว่างเซิฟเวอร์:',
-                        error.message
+                        error.message,
                     );
                 } else {
                     console.error('เกิดข้อผิดพลาดที่ไม่รู้จัก');

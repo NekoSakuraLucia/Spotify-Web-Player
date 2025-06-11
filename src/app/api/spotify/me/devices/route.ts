@@ -27,7 +27,7 @@ export async function GET(): Promise<
     if (!token) {
         return NextResponse.json(
             { message: 'ไม่พบ token กรุณาเข้าสู่ระบบก่อน' },
-            { status: 401 }
+            { status: 401 },
         );
     }
 
@@ -38,7 +38,7 @@ export async function GET(): Promise<
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },
-            }
+            },
         );
 
         const result = response.data;
@@ -51,7 +51,7 @@ export async function GET(): Promise<
                 message:
                     'ไม่พบอุปกรณ์ Spotify กรุณาเปิด Spotify บนอุปกรณ์ของคุณก่อน',
             },
-            { status: 404 }
+            { status: 404 },
         );
     } catch (error) {
         if (axios.isAxiosError(error) && error.response) {
@@ -59,7 +59,7 @@ export async function GET(): Promise<
             const ErrorMessage = getDevicesError(ErrorStatus);
             return NextResponse.json(
                 { message: ErrorMessage },
-                { status: ErrorStatus }
+                { status: ErrorStatus },
             );
         } else if (error instanceof Error) {
             return NextResponse.json(
@@ -67,7 +67,7 @@ export async function GET(): Promise<
                     message: 'Internal Server Error',
                     error: error ? error.message : 'Unknow Error',
                 },
-                { status: 500 }
+                { status: 500 },
             );
         }
 
@@ -76,7 +76,7 @@ export async function GET(): Promise<
                 message:
                     'เกิดข้อผิดพลาดในการดึงข้อมูลอุปกรณ์ กรุณาลองใหม่อีกครั้ง',
             },
-            { status: 500 }
+            { status: 500 },
         );
     }
 }

@@ -27,7 +27,7 @@ export async function GET(): Promise<
     if (!token) {
         return NextResponse.json(
             { message: 'ไม่พบ token กรุณาเข้าสู่ระบบก่อน' },
-            { status: 401 }
+            { status: 401 },
         );
     }
 
@@ -38,7 +38,7 @@ export async function GET(): Promise<
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },
-            }
+            },
         );
 
         const result = response.data;
@@ -48,7 +48,7 @@ export async function GET(): Promise<
 
         return NextResponse.json(
             { message: 'ไม่พบเพลงที่กำลังเล่นอยู่' },
-            { status: 404 }
+            { status: 404 },
         );
     } catch (error) {
         if (axios.isAxiosError(error) && error.response) {
@@ -56,7 +56,7 @@ export async function GET(): Promise<
             const ErrorMessage = getCurrentlyPlayingError(ErrorStatus);
             return NextResponse.json(
                 { message: ErrorMessage },
-                { status: ErrorStatus }
+                { status: ErrorStatus },
             );
         } else if (error instanceof Error) {
             return NextResponse.json(
@@ -64,7 +64,7 @@ export async function GET(): Promise<
                     message: 'Internal Server Error',
                     error: error ? error.message : 'Unknow Error',
                 },
-                { status: 500 }
+                { status: 500 },
             );
         }
 
@@ -73,7 +73,7 @@ export async function GET(): Promise<
                 message:
                     'เกิดข้อผิดพลาดในการดึงข้อมูลเพลงที่กำลังเล่นปัจจุบัน กรุณาลองใหม่อีกครั้ง',
             },
-            { status: 500 }
+            { status: 500 },
         );
     }
 }

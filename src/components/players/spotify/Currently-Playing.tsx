@@ -66,7 +66,7 @@ const Currently_Playing = () => {
                                     <h4 className='text-white font-medium'>
                                         {currentlyPlaying.item.name.substring(
                                             0,
-                                            20
+                                            20,
                                         )}
                                     </h4>
                                     <p className='text-sm text-zinc-400'>
@@ -79,7 +79,7 @@ const Currently_Playing = () => {
                                                             .artists.length -
                                                             1 && ', '}
                                                 </Fragment>
-                                            )
+                                            ),
                                         )}
                                     </p>
                                 </div>
