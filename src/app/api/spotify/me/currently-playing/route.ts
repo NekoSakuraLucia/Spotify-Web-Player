@@ -14,12 +14,14 @@ import { getCurrentlyPlayingError } from '@/error/GetCurrentlyPlaying.error';
 // Types
 import type { IResponse } from '@/types/spotify';
 import type { SpotifyCurrentlyUserPlaying } from '@/types/spotify_currently_playing';
+import type { SpotifyDevices } from '@/types/spotify_devices';
 
 // Cookie Name
 const COOKIES_NAME = process.env.SPOTIFY_CALLBACK_COOKIES as string;
 
 export async function GET(): Promise<
-    NextResponse<IResponse> | NextResponse<SpotifyCurrentlyUserPlaying>
+    | NextResponse<IResponse>
+    | NextResponse<SpotifyCurrentlyUserPlaying | SpotifyDevices>
 > {
     const CookiesStore = await cookies();
     const token = CookiesStore.get(COOKIES_NAME)?.value;
@@ -32,7 +34,16 @@ export async function GET(): Promise<
     }
 
     try {
-        const response = await axios.get<SpotifyCurrentlyUserPlaying>(
+        const responseDevices = await axios.get<SpotifyDevices>(
+            `${base_uri.spotify.original_uri}/me/player/devices`,
+            {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            },
+        );
+
+        const responsePlaying = await axios.get<SpotifyCurrentlyUserPlaying>(
             `${base_uri.spotify.original_uri}/me/player/currently-playing`,
             {
                 headers: {
@@ -41,8 +52,14 @@ export async function GET(): Promise<
             },
         );
 
-        const result = response.data;
-        if (result.item && result.currently_playing_type === 'track') {
+        const result = {
+            ...responseDevices.data,
+            resultPlaying: responsePlaying.data,
+        };
+        if (
+            result.resultPlaying.item &&
+            result.resultPlaying.currently_playing_type === 'track'
+        ) {
             return NextResponse.json(result);
         }
 
