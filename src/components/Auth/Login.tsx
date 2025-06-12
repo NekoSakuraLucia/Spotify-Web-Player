@@ -12,45 +12,83 @@ const Login = () => {
     };
 
     return (
-        <div className='min-h-screen bg-gradient-to-b from-zinc-900 to-black flex items-center justify-center p-5'>
-            <div className='flex flex-col items-center w-full -mt-24'>
-                {/* Header with Spotify Logo */}
-                <div className='mb-8'>
-                    <div className='flex items-center gap-2'>
-                        <FaSpotify className='text-[#1DB954] w-12 h-12' />
-                        <span className='text-white text-3xl font-bold'>
+        <div className='relative min-h-screen overflow-hidden bg-[#121212]'>
+            {/* Background Decoration */}
+            <div className='absolute -top-40 -right-40 w-96 h-96 bg-green-500/30 rounded-full blur-3xl' />
+            <div className='absolute -bottom-40 -left-40 w-96 h-96 bg-purple-500/20 rounded-full blur-3xl' />
+
+            {/* Login Container */}
+            <div className='relative z-10 min-h-screen flex items-center justify-center p-5'>
+                <div className='w-full max-w-md backdrop-blur-xl bg-white/5 rounded-2xl border border-white/10 p-8'>
+                    {/* Logo Section */}
+                    <div className='flex flex-col items-center mb-10'>
+                        <div className='relative'>
+                            <FaSpotify className='relative z-10 text-green-500 w-16 h-16' />
+                        </div>
+                        <h1 className='mt-4 text-4xl font-bold bg-gradient-to-r from-white to-zinc-400 bg-clip-text text-transparent'>
                             Spotify
-                        </span>
+                        </h1>
                     </div>
-                </div>
 
-                {/* Divider */}
-                <div className='w-full max-w-[450px] mb-8 border-b border-zinc-800' />
+                    {/* Welcome Text */}
+                    <div className='text-center mb-8'>
+                        <h2 className='text-2xl font-bold text-white mb-2'>
+                            ยินดีต้อนรับ
+                        </h2>
+                        <p className='text-zinc-400'>
+                            เข้าสู่ระบบเพื่อเข้าถึงเพลงและพอดแคสต์ทั้งหมด
+                        </p>
+                    </div>
 
-                {/* Login Content */}
-                <div className='w-full max-w-[450px] text-center'>
-                    <h2 className='text-white text-3xl font-bold mb-8'>
-                        เข้าสู่ระบบ Spotify
-                    </h2>
-
+                    {/* Login Button */}
                     <button
                         onClick={handleLogin}
-                        className='cursor-pointer w-full bg-[#1DB954] text-black font-bold py-3 px-8 rounded-full 
-                             hover:scale-105 transition-transform duration-200'
+                        className='group relative w-full bg-green-500 text-black font-bold py-3 px-8 rounded-full
+                            hover:bg-green-400 transform transition-all duration-200 hover:scale-[1.02]
+                            active:scale-[0.98] active:bg-green-600'
                     >
-                        เข้าสู่ระบบด้วย Spotify
+                        <span className='flex items-center justify-center gap-2'>
+                            <FaSpotify className='w-5 h-5' />
+                            เข้าสู่ระบบด้วย Spotify
+                        </span>
                     </button>
 
-                    <div className='mt-8'>
+                    {/* Sign Up Link */}
+                    <div className='mt-8 text-center'>
                         <p className='text-zinc-400'>
                             ยังไม่มีบัญชีใช่ไหม?{' '}
                             <a
                                 href='https://www.spotify.com/signup'
                                 target='_blank'
                                 rel='noopener noreferrer'
-                                className='text-white hover:underline'
+                                className='text-green-500 hover:text-green-400 hover:underline 
+                                    transition-colors font-medium'
                             >
                                 ลงทะเบียนเพื่อใช้ Spotify
+                            </a>
+                        </p>
+                    </div>
+
+                    {/* Footer */}
+                    <div className='mt-8 pt-6 border-t border-white/10'>
+                        <p className='text-xs text-center text-zinc-500'>
+                            การเข้าสู่ระบบจะเป็นการยอมรับ{' '}
+                            <a
+                                href='https://www.spotify.com/legal/end-user-agreement/'
+                                target='_blank'
+                                rel='noopener noreferrer'
+                                className='text-zinc-400 hover:text-white transition-colors'
+                            >
+                                ข้อกำหนดการใช้งาน
+                            </a>{' '}
+                            และ{' '}
+                            <a
+                                href='https://www.spotify.com/legal/privacy-policy/'
+                                target='_blank'
+                                rel='noopener noreferrer'
+                                className='text-zinc-400 hover:text-white transition-colors'
+                            >
+                                นโยบายความเป็นส่วนตัว
                             </a>
                         </p>
                     </div>
