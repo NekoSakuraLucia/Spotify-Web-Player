@@ -21,11 +21,11 @@ import {
 import { BiSkipPrevious, BiSkipNext, BiVolumeFull } from 'react-icons/bi';
 
 // Type
-import type { SpotifyCurrentlyUserPlaying } from '@/types/spotify_currently_playing';
+import type { SpotifyCurrentlyFullResponse } from '@/types/spotify_currently_playing';
 
 const Currently_Playing = () => {
     const [currentlyPlaying, setCurrentlyPlaying] =
-        useState<SpotifyCurrentlyUserPlaying | null>(null);
+        useState<SpotifyCurrentlyFullResponse | null>(null);
 
     useEffect(() => {
         const fetchCurrentlyPlaying = async () => {
@@ -44,6 +44,17 @@ const Currently_Playing = () => {
         fetchCurrentlyPlaying();
     }, []);
 
+    function msToTime(value: number): string {
+        const totalSeconds = Math.floor(value / 1000);
+        const minutes = Math.floor((totalSeconds % 3600) / 60)
+        const seconds = totalSeconds % 60;
+
+        const mm = minutes.toString().padStart(2, '0')
+        const ss = seconds.toString().padStart(2, '0')
+
+        return `${mm}:${ss}`
+    }
+
     return (
         <>
             {currentlyPlaying && (
@@ -52,11 +63,12 @@ const Currently_Playing = () => {
                         <div className='flex items-center justify-between'>
                             {/* Song Info */}
                             <div className='flex items-center space-x-4'>
-                                {currentlyPlaying.item.album.images?.[0] && (
+                                {currentlyPlaying.resultPlaying.item.album
+                                    .images?.[0] && (
                                     <img
                                         src={
-                                            currentlyPlaying.item.album
-                                                .images[0].url
+                                            currentlyPlaying.resultPlaying.item
+                                                .album.images[0].url
                                         }
                                         alt='Album Cover'
                                         className='w-14 h-14 rounded-md shadow-lg ring-1 ring-white/10'
@@ -64,18 +76,19 @@ const Currently_Playing = () => {
                                 )}
                                 <div>
                                     <h4 className='text-white font-medium'>
-                                        {currentlyPlaying.item.name.substring(
+                                        {currentlyPlaying.resultPlaying.item.name.substring(
                                             0,
                                             20,
                                         )}
                                     </h4>
                                     <p className='text-sm text-zinc-400'>
-                                        {currentlyPlaying.item.artists.map(
+                                        {currentlyPlaying.resultPlaying.item.artists.map(
                                             (artist, index) => (
                                                 <Fragment key={artist.id}>
                                                     {artist.name}
                                                     {index <
-                                                        currentlyPlaying.item
+                                                        currentlyPlaying
+                                                            .resultPlaying.item
                                                             .artists.length -
                                                             1 && ', '}
                                                 </Fragment>
@@ -107,7 +120,8 @@ const Currently_Playing = () => {
                                         size='icon'
                                         className='text-white hover:scale-105 transition'
                                     >
-                                        {currentlyPlaying.is_playing ? (
+                                        {currentlyPlaying.resultPlaying
+                                            .is_playing ? (
                                             <IoPauseCircle className='w-10 h-10' />
                                         ) : (
                                             <IoPlayCircle className='w-10 h-10' />
@@ -130,38 +144,47 @@ const Currently_Playing = () => {
                                 </div>
                                 <div className='w-full flex items-center space-x-2 text-sm'>
                                     <span className='text-zinc-400 w-10 text-right'>
-                                        0:00
+                                         {msToTime(currentlyPlaying.resultPlaying.progress_ms)}
                                     </span>
                                     <Slider
                                         defaultValue={[
-                                            currentlyPlaying.progress_ms,
+                                            currentlyPlaying.resultPlaying
+                                                .progress_ms,
                                         ]}
-                                        max={currentlyPlaying.item.duration_ms}
+                                        max={
+                                            currentlyPlaying.resultPlaying.item
+                                                .duration_ms
+                                        }
                                         step={1}
                                         className='w-full'
                                     />
                                     <span className='text-zinc-400 w-10'>
-                                        3:45
+                                        {msToTime(currentlyPlaying.resultPlaying.item.duration_ms)}
                                     </span>
                                 </div>
                             </div>
 
                             {/* Volume Control */}
-                            <div className='flex items-center space-x-2'>
-                                <Button
-                                    variant='ghost'
-                                    size='icon'
-                                    className='text-zinc-400 hover:text-white'
-                                >
-                                    <BiVolumeFull className='w-5 h-5' />
-                                </Button>
-                                <Slider
-                                    defaultValue={[75]}
-                                    max={100}
-                                    step={1}
-                                    className='w-24'
-                                />
-                            </div>
+                            {currentlyPlaying.devices[0]?.supports_volume && (
+                                <div className='flex items-center space-x-2'>
+                                    <Button
+                                        variant='ghost'
+                                        size='icon'
+                                        className='text-zinc-400 hover:text-white'
+                                    >
+                                        <BiVolumeFull className='w-5 h-5' />
+                                    </Button>
+                                    <Slider
+                                        defaultValue={[
+                                            currentlyPlaying.devices[0]
+                                                .volume_percent,
+                                        ]}
+                                        max={100}
+                                        step={1}
+                                        className='w-24'
+                                    />
+                                </div>
+                            )}
                         </div>
                     </div>
                 </div>

@@ -1,3 +1,5 @@
+import type { Devices } from '@/types/spotify_devices';
+
 // ประเภทสำหรับข้อมูลการเล่นเพลงปัจจุบันของผู้ใช้ Spotify Currently Playing
 export interface SpotifyCurrentlyUserPlaying {
     timestamp: number;
@@ -7,6 +9,11 @@ export interface SpotifyCurrentlyUserPlaying {
     currently_playing_type: 'track' | 'episode' | 'unknown';
     actions: CurrentlyActions;
     is_playing: boolean;
+}
+
+export interface SpotifyCurrentlyFullResponse {
+    devices: Devices[];
+    resultPlaying: SpotifyCurrentlyUserPlaying;
 }
 
 // ประเภทสำหรับข้อมูลบริบทของเพลงที่เล่นอยู่

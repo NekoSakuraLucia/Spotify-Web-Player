@@ -4,7 +4,8 @@ import axios, { AxiosError } from 'axios';
 
 // Types
 import type { SpotifyUserArtists } from '@/types/spotify_artists';
-import type { SpotifyCurrentlyUserPlaying } from '@/types/spotify_currently_playing';
+import type { SpotifyDevices } from '@/types/spotify_devices';
+import type { SpotifyCurrentlyFullResponse } from '@/types/spotify_currently_playing';
 
 // ประเภทของผลลัพธ์ที่ส่งกลับจากฟังก์ชัน
 interface IActionResponse<Types> {
@@ -19,7 +20,7 @@ export async function TopArtists(): Promise<
 > {
     try {
         const response = await axios.get<SpotifyUserArtists>(
-            '/api/spotify/me/top/artists?limit=3'
+            '/api/spotify/me/top/artists?limit=3',
         );
 
         const ArtistsData = response.data;
@@ -44,17 +45,17 @@ export async function TopArtists(): Promise<
 
 // ฟังก์ชันสำหรับดึงข้อมูลเพลงที่กำลังเล่นของผู้ใช้ Spotify
 export async function CurrentlyPlaying(): Promise<
-    IActionResponse<SpotifyCurrentlyUserPlaying>
+    IActionResponse<SpotifyCurrentlyFullResponse>
 > {
     try {
-        const response = await axios.get<SpotifyCurrentlyUserPlaying>(
-            '/api/spotify/me/currently-playing'
+        const response = await axios.get<SpotifyCurrentlyFullResponse>(
+            '/api/spotify/me/currently-playing',
         );
 
         const PlayingData = response.data;
         if (
-            PlayingData.item &&
-            PlayingData.currently_playing_type === 'track'
+            PlayingData.resultPlaying.item &&
+            PlayingData.resultPlaying.currently_playing_type === 'track'
         ) {
             return { success: true, result: PlayingData };
         }
@@ -75,6 +76,42 @@ export async function CurrentlyPlaying(): Promise<
             success: false,
             message:
                 'เกิดข้อผิดพลาดในการดึงข้อมูลเพลงที่กำลังเล่น กรุณาลองใหม่อีกครั้ง',
+        };
+    }
+}
+
+export async function DevicesPlayer(): Promise<
+    IActionResponse<SpotifyDevices>
+> {
+    try {
+        const response = await axios.get<SpotifyDevices>(
+            '/api/spotify/me/devices',
+        );
+
+        const devicesData = response.data;
+        if (devicesData.devices.length > 0) {
+            return { success: true, result: devicesData };
+        }
+
+        return {
+            success: false,
+            message:
+                'ไม่พบอุปกรณ์ Spotify กรุณาเปิด Spotify บนอุปกรณ์ของคุณก่อน',
+        };
+    } catch (error) {
+        if (axios.isAxiosError(error) && error.response) {
+            const ErrorMessage = (error.response.data as AxiosError).message;
+            return { success: false, message: ErrorMessage };
+        } else if (error instanceof Error) {
+            return {
+                success: false,
+                message: `Internal Server Error: ${error.message}`,
+            };
+        }
+
+        return {
+            success: false,
+            message: 'เกิดข้อผิดพลาดในการดึงข้อมูลอุปกรณ์ กรุณาลองใหม่อีกครั้ง',
         };
     }
 }
