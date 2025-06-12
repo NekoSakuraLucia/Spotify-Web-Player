@@ -23,6 +23,7 @@ import {
 } from '@/components/ui/hover-card';
 
 import { UserProfile } from '@/components/players/spotify/UserProfile';
+import { Devices } from '@/components/players/spotify/Devices';
 import { Currently_Playing } from '@/components/players/spotify/Currently-Playing';
 
 // Icon
@@ -52,7 +53,7 @@ const MOCK_PLAYLISTS: PlaylistItem[] = [
 
 const Home = () => {
     const [artistsData, setArtistsData] = useState<SpotifyUserArtists | null>(
-        null
+        null,
     );
     const { user, logout } = useGetUser();
 
@@ -77,8 +78,10 @@ const Home = () => {
         <>
             <ScrollArea className='h-screen'>
                 <div className='min-h-screen bg-gradient-to-br from-emerald-900/30 via-zinc-900 to-black text-white p-4 lg:p-8'>
-                    <div className='container mx-auto'>
+                    <div className='container mx-auto flex flex-col min-[900px]:flex-row items-start min-[900px]:gap-4 mb-8'>
                         {user && <UserProfile user={user} logout={logout} />}
+                        {/* คอมโพเนนต์สำหรับแสดง */}
+                        <Devices />
                     </div>
 
                     <div className='container mx-auto'>
@@ -179,7 +182,7 @@ const Home = () => {
                                                                                 genre
                                                                             }
                                                                         </span>
-                                                                    )
+                                                                    ),
                                                                 )}
                                                         </div>
                                                     </div>
@@ -258,6 +261,7 @@ const Home = () => {
                 </div>
             </ScrollArea>
 
+            {/* คอมโพเนนต์แสดง เพลงที่กำลังเล่นปัจจุบัน */}
             <Currently_Playing />
         </>
     );
