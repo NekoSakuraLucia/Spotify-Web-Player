@@ -21,6 +21,8 @@ export default async function SpotifyAuth(): Promise<never> {
         redirect_uri: REDIRECT_URI,
     };
 
-    const authorization = `${base_uri.spotify.accounts_uri}/authorize?` + qs.stringify(queryParam)
+    const authorization =
+        `${base_uri.spotify.accounts_uri}/authorize?` +
+        qs.stringify(queryParam);
     return redirect(authorization);
 }

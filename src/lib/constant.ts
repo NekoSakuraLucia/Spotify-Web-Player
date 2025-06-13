@@ -6,4 +6,4 @@ const AuthScope = [
     'user-read-playback-state',
 ] as const;
 
-export { AuthScope }
+export { AuthScope };
