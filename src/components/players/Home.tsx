@@ -13,8 +13,6 @@ import { TopArtists } from '@/actions/SpotifyAction';
 import type { SpotifyUserArtists } from '@/types/spotify_artists';
 
 // shadcn/ui components
-import { Card, CardContent } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import {
     HoverCard,
@@ -23,7 +21,6 @@ import {
 } from '@/components/ui/hover-card';
 
 import { UserProfile } from '@/components/players/spotify/UserProfile';
-import { Devices } from '@/components/players/spotify/Devices';
 import { Currently_Playing } from '@/components/players/spotify/Currently-Playing';
 
 // Icon
@@ -76,123 +73,108 @@ const Home = () => {
 
     return (
         <>
-            <ScrollArea className='h-screen'>
-                <div className='min-h-screen bg-gradient-to-br from-emerald-900/30 via-zinc-900 to-black text-white p-4 lg:p-8'>
-                    <div className='container mx-auto flex flex-col min-[900px]:flex-row items-start min-[900px]:gap-4 mb-8'>
-                        {user && <UserProfile user={user} logout={logout} />}
-                        {/* คอมโพเนนต์สำหรับแสดง */}
-                        <Devices />
-                    </div>
-
-                    <div className='container mx-auto'>
-                        <section className='mb-8'>
-                            <h1 className='text-4xl font-bold mb-6 bg-gradient-to-r from-white to-green-400 bg-clip-text text-transparent'>
-                                Good evening
-                            </h1>
-                            <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4'>
-                                {MOCK_PLAYLISTS.slice(0, 6).map((playlist) => (
-                                    <button
-                                        key={playlist.id}
-                                        className='flex items-center backdrop-blur-sm bg-white/5 hover:bg-white/10 rounded-lg overflow-hidden transition-all group'
-                                    >
-                                        <img
-                                            src={playlist.imageUrl}
-                                            alt={playlist.name}
-                                            className='h-16 w-16 group-hover:scale-105 transition-transform duration-300'
-                                        />
-                                        <span className='font-semibold px-4 group-hover:text-green-400 transition-colors'>
-                                            {playlist.name}
-                                        </span>
-                                    </button>
-                                ))}
+            <div className='relative min-h-screen bg-gradient-to-br from-zinc-900 via-black to-zinc-900'>
+                <ScrollArea className='h-[calc(100vh-80px)]'>
+                    {/* 80px for player height */}
+                    <div className='px-4 py-6 md:px-6 lg:px-8'>
+                        {/* Top Section */}
+                        <div className='grid grid-cols-1 lg:grid-cols-12 gap-6 mb-8'>
+                            <div className='lg:col-span-3'>
+                                {user && (
+                                    <UserProfile user={user} logout={logout} />
+                                )}
                             </div>
-                        </section>
+                        </div>
 
-                        {/* Made for You Section */}
+                        {/* Artists Section */}
                         {artistsData && (
-                            <section className='mb-8 backdrop-blur-sm bg-white/5 p-6 rounded-xl'>
-                                <h2 className='text-2xl font-bold mb-6 text-green-400'>
+                            <section className='mb-8'>
+                                <h2 className='text-2xl font-bold text-zinc-100 mb-6'>
                                     Made for you
                                 </h2>
-                                <div className='grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-6'>
+                                <div className='grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-4'>
                                     {artistsData.items?.map((artist) => (
                                         <HoverCard key={artist.id}>
-                                            <HoverCardTrigger>
-                                                <Card className='backdrop-blur-md bg-white/5 border border-white/10 hover:bg-white/10 transition-all cursor-pointer group'>
-                                                    <CardContent>
-                                                        <div className='overflow-hidden rounded-lg'>
-                                                            <img
-                                                                src={
-                                                                    artist
-                                                                        .images[0]
-                                                                        .url
-                                                                }
-                                                                alt={
-                                                                    artist.name
-                                                                }
-                                                                className='w-full aspect-square mb-4'
-                                                                draggable={
-                                                                    false
-                                                                }
-                                                            />
-                                                        </div>
-                                                        <h3 className='font-semibold truncate text-lg group-hover:text-green-400 transition-colors'>
-                                                            {artist.name}
-                                                        </h3>
-                                                        <p className='text-sm text-zinc-400 truncate'>
-                                                            ผู้ติดตาม:{' '}
-                                                            {artist.followers.total.toLocaleString()}
-                                                        </p>
-                                                    </CardContent>
-                                                </Card>
+                                            <HoverCardTrigger asChild>
+                                                <button className='group text-left'>
+                                                    <div className='relative aspect-square rounded-lg overflow-hidden bg-zinc-900/50 mb-3'>
+                                                        <img
+                                                            src={
+                                                                artist.images[0]
+                                                                    .url
+                                                            }
+                                                            alt={artist.name}
+                                                            className='object-cover w-full h-full group-hover:scale-105 transition-all duration-300'
+                                                        />
+                                                        <div className='absolute inset-0 bg-black/20 group-hover:bg-black/40 transition-colors' />
+                                                    </div>
+                                                    <h3 className='font-medium text-zinc-100 group-hover:text-green-400 transition-colors'>
+                                                        {artist.name}
+                                                    </h3>
+                                                    <p className='text-sm text-zinc-400'>
+                                                        {artist.followers.total.toLocaleString()}{' '}
+                                                        followers
+                                                    </p>
+                                                </button>
                                             </HoverCardTrigger>
-                                            <HoverCardContent className='backdrop-blur-md bg-zinc-900/90 border border-white/10 p-4 w-80 shadow-xl'>
-                                                <div className='flex space-x-4'>
-                                                    <img
-                                                        src={
-                                                            artist.images[0].url
-                                                        }
-                                                        alt={artist.name}
-                                                        className='h-24 w-24 rounded-lg object-cover ring-2 ring-green-500/20'
-                                                    />
-                                                    <div className='space-y-2'>
-                                                        <h3 className='font-bold text-lg text-white'>
+                                            <HoverCardContent className='w-80 p-0 bg-zinc-900/95 border border-zinc-800 rounded-xl overflow-hidden'>
+                                                {/* ภาพปกพร้อมการซ้อนทับแบบไล่เฉดสี */}
+                                                <div className='relative h-32 w-full'>
+                                                    {artist.images?.[0] && (
+                                                        <img
+                                                            src={
+                                                                artist.images[0]
+                                                                    .url
+                                                            }
+                                                            alt={artist.name}
+                                                            className='w-full h-full object-cover'
+                                                        />
+                                                    )}
+                                                    <div className='absolute inset-0 bg-gradient-to-b from-black/40 to-black/80' />
+                                                    <div className='absolute bottom-4 left-4'>
+                                                        <h3 className='text-2xl font-bold text-white mb-1'>
                                                             {artist.name}
                                                         </h3>
-                                                        <div className='flex items-center space-x-2 text-sm text-zinc-400'>
-                                                            <span>Artist</span>
-                                                            <span>•</span>
-                                                            <span>
-                                                                {artist.followers.total.toLocaleString()}{' '}
-                                                                ผู้ติดตาม
-                                                            </span>
-                                                        </div>
-                                                        <div className='flex items-center space-x-2'>
-                                                            {artist.genres
-                                                                .slice(0, 2)
-                                                                .map(
-                                                                    (genre) => (
-                                                                        <span
-                                                                            key={
-                                                                                genre
-                                                                            }
-                                                                            className='px-2 py-1 rounded-full bg-white/5 text-xs text-zinc-300'
-                                                                        >
-                                                                            {
-                                                                                genre
-                                                                            }
-                                                                        </span>
-                                                                    ),
-                                                                )}
-                                                        </div>
+                                                        <p className='text-sm text-zinc-300'>
+                                                            Artist
+                                                        </p>
                                                     </div>
                                                 </div>
-                                                <div className='mt-4 flex items-center justify-between'>
-                                                    <div className='text-sm'>
-                                                        <p className='text-zinc-400'>
-                                                            Popularity
-                                                        </p>
-                                                        <div className='w-32 h-1.5 bg-white/10 rounded-full mt-1'>
+
+                                                {/* Artist Stats */}
+                                                <div className='p-4 space-y-4'>
+                                                    <div className='flex items-center justify-between'>
+                                                        <div>
+                                                            <p className='text-sm text-zinc-400'>
+                                                                Monthly
+                                                                Listeners
+                                                            </p>
+                                                            <p className='text-white font-medium'>
+                                                                {artist.followers.total.toLocaleString()}
+                                                            </p>
+                                                        </div>
+                                                        <button
+                                                            className='px-6 py-2 rounded-full bg-green-500 hover:bg-green-400 
+                text-black font-medium text-sm transition-colors'
+                                                        >
+                                                            ติดตาม
+                                                        </button>
+                                                    </div>
+
+                                                    {/* Popularity Bar */}
+                                                    <div>
+                                                        <div className='flex items-center justify-between text-sm mb-2'>
+                                                            <span className='text-zinc-400'>
+                                                                Popularity
+                                                            </span>
+                                                            <span className='text-white font-medium'>
+                                                                {
+                                                                    artist.popularity
+                                                                }
+                                                                %
+                                                            </span>
+                                                        </div>
+                                                        <div className='h-1.5 w-full bg-zinc-800 rounded-full overflow-hidden'>
                                                             <div
                                                                 className='h-full bg-green-500 rounded-full'
                                                                 style={{
@@ -201,12 +183,38 @@ const Home = () => {
                                                             />
                                                         </div>
                                                     </div>
-                                                    <Button
-                                                        size='sm'
-                                                        className='rounded-full bg-green-500 hover:bg-green-400 text-black font-medium px-4'
-                                                    >
-                                                        ติดตาม
-                                                    </Button>
+
+                                                    {/* Genres */}
+                                                    {artist.genres.length >
+                                                        0 && (
+                                                        <div>
+                                                            <p className='text-sm text-zinc-400 mb-2'>
+                                                                Genres
+                                                            </p>
+                                                            <div className='flex flex-wrap gap-2'>
+                                                                {artist.genres
+                                                                    .slice(0, 3)
+                                                                    .map(
+                                                                        (
+                                                                            genre,
+                                                                        ) => (
+                                                                            <span
+                                                                                key={
+                                                                                    genre
+                                                                                }
+                                                                                className='px-3 py-1 rounded-full text-xs font-medium
+                                bg-white/10 text-zinc-300 hover:bg-white/20 
+                                transition-colors cursor-pointer'
+                                                                            >
+                                                                                {
+                                                                                    genre
+                                                                                }
+                                                                            </span>
+                                                                        ),
+                                                                    )}
+                                                            </div>
+                                                        </div>
+                                                    )}
                                                 </div>
                                             </HoverCardContent>
                                         </HoverCard>
@@ -216,53 +224,44 @@ const Home = () => {
                         )}
 
                         {/* Recently Played Section */}
-                        <section className='space-y-4 backdrop-blur-sm bg-white/5 p-6 rounded-xl'>
-                            <h2 className='text-2xl font-bold text-green-400'>
+                        <section className='mb-8'>
+                            <h2 className='text-2xl font-bold text-zinc-100 mb-6'>
                                 Recently played
                             </h2>
-                            <div className='grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-6'>
+                            <div className='grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-7 gap-4'>
                                 {MOCK_PLAYLISTS.map((playlist) => (
-                                    <Card
+                                    <div
                                         key={playlist.id}
-                                        className='backdrop-blur-md bg-white/5 border border-white/10 hover:bg-white/10 transition-all cursor-pointer group'
+                                        className='group relative bg-zinc-900/50 rounded-lg p-3 hover:bg-zinc-800/50 transition-all duration-300'
                                     >
-                                        <CardContent className='space-y-4'>
-                                            <div className='relative aspect-square overflow-hidden rounded-lg'>
-                                                <img
-                                                    src={playlist.imageUrl}
-                                                    alt={playlist.name}
-                                                    className='rounded-lg object-cover shadow-lg group-hover:scale-105 transition-transform duration-300'
-                                                    draggable={false}
-                                                />
-                                                <div className='absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity' />
-                                                <div className='absolute right-2 bottom-2 opacity-0 group-hover:opacity-100 transition-all transform translate-y-2 group-hover:translate-y-0'>
-                                                    <Button
-                                                        size='icon'
-                                                        className='rounded-full bg-green-500 hover:bg-green-400 shadow-xl hover:scale-105 transition-transform'
-                                                    >
-                                                        <PlayIcon className='h-5 w-5 text-black' />
-                                                    </Button>
+                                        <div className='relative aspect-square rounded-lg overflow-hidden mb-3'>
+                                            <img
+                                                src={playlist.imageUrl}
+                                                alt={playlist.name}
+                                                className='object-cover w-full h-full group-hover:scale-105 transition-all duration-300'
+                                            />
+                                            <div className='absolute inset-0 bg-black/20 group-hover:bg-black/40 transition-colors' />
+                                            <button className='absolute right-2 bottom-2 opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300'>
+                                                <div className='p-2 rounded-full bg-green-500 hover:bg-green-400 shadow-xl'>
+                                                    <PlayIcon className='h-5 w-5 text-black' />
                                                 </div>
-                                            </div>
-                                            <div>
-                                                <h3 className='font-bold truncate group-hover:text-green-400 transition-colors'>
-                                                    {playlist.name}
-                                                </h3>
-                                                <p className='text-sm text-zinc-400 truncate'>
-                                                    {playlist.artist}
-                                                </p>
-                                            </div>
-                                        </CardContent>
-                                    </Card>
+                                            </button>
+                                        </div>
+                                        <h3 className='font-medium text-zinc-100 group-hover:text-green-400'>
+                                            {playlist.name}
+                                        </h3>
+                                        <p className='text-sm text-zinc-400'>
+                                            {playlist.artist}
+                                        </p>
+                                    </div>
                                 ))}
                             </div>
                         </section>
                     </div>
-                </div>
-            </ScrollArea>
+                </ScrollArea>
 
-            {/* คอมโพเนนต์แสดง เพลงที่กำลังเล่นปัจจุบัน */}
-            <Currently_Playing />
+                <Currently_Playing />
+            </div>
         </>
     );
 };
