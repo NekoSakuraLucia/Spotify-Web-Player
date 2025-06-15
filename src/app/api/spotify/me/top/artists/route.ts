@@ -2,6 +2,9 @@
 import { cookies } from 'next/headers';
 import { NextRequest, NextResponse } from 'next/server';
 
+// Query String (Lib)
+import { QueryString } from '@/lib/players/QueryString.api.artists';
+
 // Axios
 import axios from 'axios';
 
@@ -34,11 +37,14 @@ export async function GET(
         );
     }
 
+    const queryParam = {
+        limit: limitQuery ? limitQuery : null,
+    };
+
     try {
         const response = await axios.get<SpotifyUserArtists>(
-            `${base_uri.spotify.original_uri}/me/top/artists${
-                limitQuery ? `?limit=${limitQuery}` : ''
-            }`,
+            `${base_uri.spotify.original_uri}/me/top/artists` +
+                QueryString(queryParam),
             {
                 headers: {
                     Authorization: `Bearer ${token}`,
