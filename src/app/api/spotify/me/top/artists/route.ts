@@ -28,7 +28,8 @@ export async function GET(
     const token = CookiesStore.get(COOKIES_NAME)?.value;
 
     const searchParams = req.nextUrl.searchParams;
-    const limitQuery = searchParams.get('limit');
+    const params = Object.fromEntries(searchParams.entries());
+    const { limit, offset } = params;
 
     if (!token) {
         return NextResponse.json(
@@ -38,7 +39,8 @@ export async function GET(
     }
 
     const queryParam = {
-        limit: limitQuery ? limitQuery : null,
+        limit: limit ? limit : null,
+        offset: offset ? offset : null,
     };
 
     try {
