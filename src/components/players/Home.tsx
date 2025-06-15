@@ -22,9 +22,12 @@ import {
 
 import { UserProfile } from '@/components/players/spotify/UserProfile';
 import { Currently_Playing } from '@/components/players/spotify/Currently-Playing';
+import { AuthenticationModal } from '@/components/players/spotify/ForceLogin/AuthenticationModal';
 
 // Icon
 import { PlayIcon } from 'lucide-react';
+
+// Type
 interface PlaylistItem {
     id: string;
     name: string;
@@ -70,6 +73,8 @@ const Home = () => {
 
         fetchArtists();
     }, []);
+
+    if (!user) return <AuthenticationModal />;
 
     return (
         <>
@@ -154,7 +159,7 @@ const Home = () => {
                                                             </p>
                                                         </div>
                                                         <button
-                                                            className='px-6 py-2 rounded-full bg-green-500 hover:bg-green-400 
+                                                            className='px-6 py-2 rounded-full bg-green-500 hover:bg-green-400
                 text-black font-medium text-sm transition-colors'
                                                         >
                                                             ติดตาม
@@ -203,7 +208,7 @@ const Home = () => {
                                                                                     genre
                                                                                 }
                                                                                 className='px-3 py-1 rounded-full text-xs font-medium
-                                bg-white/10 text-zinc-300 hover:bg-white/20 
+                                bg-white/10 text-zinc-300 hover:bg-white/20
                                 transition-colors cursor-pointer'
                                                                             >
                                                                                 {
