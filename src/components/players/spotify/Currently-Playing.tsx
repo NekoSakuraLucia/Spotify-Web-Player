@@ -7,6 +7,9 @@ import { Fragment, useState, useEffect } from 'react';
 // Action
 import { CurrentlyPlaying } from '@/actions/SpotifyAction';
 
+// components
+import { PlayerModal } from '@/components/players/spotify/currently/PlayerModal';
+
 // Icon
 import {
     IoPlayCircle,
@@ -22,6 +25,7 @@ import type { SpotifyCurrentlyFullResponse } from '@/types/spotify_currently_pla
 const Currently_Playing = () => {
     const [currentlyPlaying, setCurrentlyPlaying] =
         useState<SpotifyCurrentlyFullResponse | null>(null);
+    const [isModalOpen, setIsModalOpen] = useState(false);
 
     useEffect(() => {
         const fetchCurrentlyPlaying = async () => {
@@ -58,124 +62,181 @@ const Currently_Playing = () => {
         100;
 
     return (
-        <div className='fixed bottom-0 left-0 right-0 h-20 backdrop-blur-xl bg-black/60 border-t border-white/10'>
-            <div className='h-full container mx-auto px-4'>
-                <div className='h-full flex items-center justify-between gap-4'>
-                    {/* Song Info */}
-                    <div className='flex items-center gap-4 min-w-0 w-[30%]'>
-                        <div className='relative h-14 w-14 rounded-md overflow-hidden flex-shrink-0'>
-                            <img
-                                src={
-                                    currentlyPlaying.resultPlaying.item.album
-                                        .images[0].url
-                                }
-                                alt='Album Cover'
-                                className='object-cover w-full h-full'
-                            />
-                        </div>
-                        <div className='min-w-0'>
-                            <h4 className='text-white font-medium truncate'>
-                                {currentlyPlaying.resultPlaying.item.name}
-                            </h4>
-                            <p className='text-sm text-zinc-400 truncate'>
-                                {currentlyPlaying.resultPlaying.item.artists.map(
-                                    (artist, index) => (
-                                        <Fragment key={artist.id}>
-                                            {artist.name}
-                                            {index <
-                                                currentlyPlaying.resultPlaying
-                                                    .item.artists.length -
-                                                    1 && ', '}
-                                        </Fragment>
-                                    ),
-                                )}
-                            </p>
-                        </div>
-                    </div>
+        <>
+            <PlayerModal
+                currentlyPlaying={currentlyPlaying}
+                isOpen={isModalOpen}
+                onClose={() => setIsModalOpen(false)}
+                msToTime={msToTime}
+                progress={progress}
+            />
 
-                    {/* Player Controls */}
-                    <div className='flex flex-col items-center gap-2 max-w-[45%] w-full'>
-                        <div className='flex items-center gap-4'>
-                            <button className='p-2 text-zinc-400 hover:text-white transition-colors'>
-                                <IoShuffleOutline className='w-5 h-5' />
-                            </button>
-                            <button className='p-2 text-zinc-400 hover:text-white transition-colors'>
-                                <BiSkipPrevious className='w-8 h-8' />
-                            </button>
-                            <button className='p-2 text-white hover:scale-105 transition-transform'>
-                                {currentlyPlaying.resultPlaying.is_playing ? (
-                                    <IoPauseCircle className='w-10 h-10' />
-                                ) : (
-                                    <IoPlayCircle className='w-10 h-10' />
-                                )}
-                            </button>
-                            <button className='p-2 text-zinc-400 hover:text-white transition-colors'>
-                                <BiSkipNext className='w-8 h-8' />
-                            </button>
-                            <button className='p-2 text-zinc-400 hover:text-white transition-colors'>
-                                <IoRepeatOutline className='w-5 h-5' />
-                            </button>
-                        </div>
-
-                        {/* Custom Progress Bar */}
-                        <div className='w-full flex items-center gap-2 px-4'>
-                            <span className='text-xs text-zinc-400 w-10 text-right'>
-                                {msToTime(
-                                    currentlyPlaying.resultPlaying.progress_ms,
-                                )}
-                            </span>
-                            <div className='relative w-full h-1 group'>
-                                <div className='absolute inset-0 rounded-full bg-white/10 cursor-pointer'>
-                                    <div
-                                        className='h-full rounded-full bg-white group-hover:bg-green-500 transition-colors'
-                                        style={{ width: `${progress}%` }}
-                                    />
-                                </div>
-                                <div
-                                    className='absolute h-3 w-3 rounded-full bg-white -translate-y-1 opacity-0 group-hover:opacity-100 transition-opacity'
-                                    style={{
-                                        left: `${progress}%`,
-                                        transform: `translateX(-50%) translateY(-25%)`,
-                                    }}
+            <div className='fixed bottom-0 left-0 right-0 h-20 backdrop-blur-xl bg-black/60 border-t border-white/10'>
+                <div className='h-full container mx-auto px-4'>
+                    {/* Mobile View */}
+                    <button
+                        onClick={() => setIsModalOpen(true)}
+                        className='md:hidden h-full w-full flex items-center justify-between'
+                    >
+                        <div className='flex items-center gap-3 flex-1 min-w-0'>
+                            <div className='relative h-12 w-12 rounded overflow-hidden flex-shrink-0'>
+                                <img
+                                    src={
+                                        currentlyPlaying.resultPlaying.item
+                                            .album.images[0].url
+                                    }
+                                    alt='Album Cover'
+                                    className='w-full h-full object-cover'
                                 />
                             </div>
-                            <span className='text-xs text-zinc-400 w-10'>
-                                {msToTime(
-                                    currentlyPlaying.resultPlaying.item
-                                        .duration_ms,
-                                )}
-                            </span>
+                            <div className='min-w-0 text-left'>
+                                <h4 className='text-white font-medium truncate'>
+                                    {currentlyPlaying.resultPlaying.item.name}
+                                </h4>
+                                <p className='text-sm text-zinc-400 truncate'>
+                                    {currentlyPlaying.resultPlaying.item.artists.map(
+                                        (artist, index) => (
+                                            <Fragment key={artist.id}>
+                                                {artist.name}
+                                                {index <
+                                                    currentlyPlaying
+                                                        .resultPlaying.item
+                                                        .artists.length -
+                                                        1 && ', '}
+                                            </Fragment>
+                                        ),
+                                    )}
+                                </p>
+                            </div>
                         </div>
-                    </div>
 
-                    {/* Volume Control */}
-                    {currentlyPlaying.devices[0]?.supports_volume && (
-                        <div className='flex items-center gap-3 w-[25%] justify-end'>
-                            <button className='p-2 text-zinc-400 hover:text-white transition-colors'>
-                                <BiVolumeFull className='w-5 h-5' />
-                            </button>
-                            <div className='relative w-24 h-1 group'>
-                                <div className='absolute inset-0 rounded-full bg-white/10 cursor-pointer'>
+                        {currentlyPlaying.resultPlaying.is_playing ? (
+                            <IoPauseCircle className='w-8 h-8 text-white' />
+                        ) : (
+                            <IoPlayCircle className='w-8 h-8 text-white' />
+                        )}
+                    </button>
+
+                    <div className='hidden h-full md:flex items-center justify-between gap-4'>
+                        {/* Song Info */}
+                        <div className='flex items-center gap-4 min-w-0 w-[30%]'>
+                            <div className='relative h-14 w-14 rounded-md overflow-hidden flex-shrink-0'>
+                                <img
+                                    src={
+                                        currentlyPlaying.resultPlaying.item
+                                            .album.images[0].url
+                                    }
+                                    alt='Album Cover'
+                                    className='object-cover w-full h-full'
+                                />
+                            </div>
+                            <div className='min-w-0'>
+                                <h4 className='text-white font-medium truncate'>
+                                    {currentlyPlaying.resultPlaying.item.name}
+                                </h4>
+                                <p className='text-sm text-zinc-400 truncate'>
+                                    {currentlyPlaying.resultPlaying.item.artists.map(
+                                        (artist, index) => (
+                                            <Fragment key={artist.id}>
+                                                {artist.name}
+                                                {index <
+                                                    currentlyPlaying
+                                                        .resultPlaying.item
+                                                        .artists.length -
+                                                        1 && ', '}
+                                            </Fragment>
+                                        ),
+                                    )}
+                                </p>
+                            </div>
+                        </div>
+
+                        {/* Player Controls */}
+                        <div className='flex flex-col items-center gap-2 max-w-[45%] w-full'>
+                            <div className='flex items-center gap-4'>
+                                <button className='p-2 text-zinc-400 hover:text-white transition-colors'>
+                                    <IoShuffleOutline className='w-5 h-5' />
+                                </button>
+                                <button className='p-2 text-zinc-400 hover:text-white transition-colors'>
+                                    <BiSkipPrevious className='w-8 h-8' />
+                                </button>
+                                <button className='p-2 text-white hover:scale-105 transition-transform'>
+                                    {currentlyPlaying.resultPlaying
+                                        .is_playing ? (
+                                        <IoPauseCircle className='w-10 h-10' />
+                                    ) : (
+                                        <IoPlayCircle className='w-10 h-10' />
+                                    )}
+                                </button>
+                                <button className='p-2 text-zinc-400 hover:text-white transition-colors'>
+                                    <BiSkipNext className='w-8 h-8' />
+                                </button>
+                                <button className='p-2 text-zinc-400 hover:text-white transition-colors'>
+                                    <IoRepeatOutline className='w-5 h-5' />
+                                </button>
+                            </div>
+
+                            {/* Custom Progress Bar */}
+                            <div className='w-full flex items-center gap-2 px-4'>
+                                <span className='text-xs text-zinc-400 w-10 text-right'>
+                                    {msToTime(
+                                        currentlyPlaying.resultPlaying
+                                            .progress_ms,
+                                    )}
+                                </span>
+                                <div className='relative w-full h-1 group'>
+                                    <div className='absolute inset-0 rounded-full bg-white/10 cursor-pointer'>
+                                        <div
+                                            className='h-full rounded-full bg-white group-hover:bg-green-500 transition-colors'
+                                            style={{ width: `${progress}%` }}
+                                        />
+                                    </div>
                                     <div
-                                        className='h-full rounded-full bg-white group-hover:bg-green-500 transition-colors'
+                                        className='absolute h-3 w-3 rounded-full bg-white -translate-y-1 opacity-0 group-hover:opacity-100 transition-opacity'
                                         style={{
-                                            width: `${currentlyPlaying.devices[0].volume_percent}%`,
+                                            left: `${progress}%`,
+                                            transform: `translateX(-50%) translateY(-25%)`,
                                         }}
                                     />
                                 </div>
-                                <div
-                                    className='absolute h-3 w-3 rounded-full bg-white -translate-y-1 opacity-0 group-hover:opacity-100 transition-opacity'
-                                    style={{
-                                        left: `${currentlyPlaying.devices[0].volume_percent}%`,
-                                        transform: `translateX(-50%) translateY(-25%)`,
-                                    }}
-                                />
+                                <span className='text-xs text-zinc-400 w-10'>
+                                    {msToTime(
+                                        currentlyPlaying.resultPlaying.item
+                                            .duration_ms,
+                                    )}
+                                </span>
                             </div>
                         </div>
-                    )}
+
+                        {/* Volume Control */}
+                        {currentlyPlaying.devices[0]?.supports_volume && (
+                            <div className='flex items-center gap-3 w-[25%] justify-end'>
+                                <button className='p-2 text-zinc-400 hover:text-white transition-colors'>
+                                    <BiVolumeFull className='w-5 h-5' />
+                                </button>
+                                <div className='relative w-24 h-1 group'>
+                                    <div className='absolute inset-0 rounded-full bg-white/10 cursor-pointer'>
+                                        <div
+                                            className='h-full rounded-full bg-white group-hover:bg-green-500 transition-colors'
+                                            style={{
+                                                width: `${currentlyPlaying.devices[0].volume_percent}%`,
+                                            }}
+                                        />
+                                    </div>
+                                    <div
+                                        className='absolute h-3 w-3 rounded-full bg-white -translate-y-1 opacity-0 group-hover:opacity-100 transition-opacity'
+                                        style={{
+                                            left: `${currentlyPlaying.devices[0].volume_percent}%`,
+                                            transform: `translateX(-50%) translateY(-25%)`,
+                                        }}
+                                    />
+                                </div>
+                            </div>
+                        )}
+                    </div>
                 </div>
             </div>
-        </div>
+        </>
     );
 };
 
