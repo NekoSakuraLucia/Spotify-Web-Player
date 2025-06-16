@@ -9,9 +9,6 @@ import { useGetUser } from '@/context/userContext';
 // Action
 import { TopArtists } from '@/actions/SpotifyAction';
 
-// Type
-import type { SpotifyUserArtists } from '@/types/spotify_artists';
-
 // shadcn/ui components
 import { ScrollArea } from '@/components/ui/scroll-area';
 import {
@@ -25,10 +22,15 @@ import { Currently_Playing } from '@/components/players/spotify/Currently-Playin
 import { AuthenticationModal } from '@/components/players/spotify/ForceLogin/AuthenticationModal';
 import { ArtistsModal } from '@/components/players/spotify/artists/ArtistsModal';
 
+// Mock
+import { INITIAL_ARTIST_STATE } from '@/mock/INITIAL_ARTIST.mock';
+
 // Icon
 import { PlayIcon } from 'lucide-react';
 
-// Type
+// Types
+import type { SpotifyUserArtists } from '@/types/spotify_artists';
+
 interface PlaylistItem {
     id: string;
     name: string;
@@ -51,40 +53,6 @@ const MOCK_PLAYLISTS: PlaylistItem[] = [
     },
     // Add more mock data as needed
 ];
-
-const INITIAL_ARTIST = {
-    external_urls: {
-        spotify: '',
-    },
-    followers: {
-        href: null,
-        total: 0,
-    },
-    genres: [] as string[],
-    href: '',
-    id: '',
-    images: [
-        {
-            height: 0,
-            url: '',
-            width: 0,
-        },
-    ],
-    name: '',
-    popularity: 0,
-    type: 'artist',
-    uri: '',
-};
-
-const INITIAL_ARTIST_STATE = {
-    items: [INITIAL_ARTIST],
-    total: 0,
-    limit: 0,
-    offset: 0,
-    href: '',
-    next: '',
-    previous: null,
-};
 
 const Home = () => {
     const [artistsData, setArtistsData] = useState<SpotifyUserArtists | null>(
