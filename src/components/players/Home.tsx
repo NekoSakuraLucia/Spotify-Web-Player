@@ -23,6 +23,7 @@ import {
 import { UserProfile } from '@/components/players/spotify/UserProfile';
 import { Currently_Playing } from '@/components/players/spotify/Currently-Playing';
 import { AuthenticationModal } from '@/components/players/spotify/ForceLogin/AuthenticationModal';
+import { ArtistsModal } from '@/components/players/spotify/artists/ArtistsModal';
 
 // Icon
 import { PlayIcon } from 'lucide-react';
@@ -51,11 +52,50 @@ const MOCK_PLAYLISTS: PlaylistItem[] = [
     // Add more mock data as needed
 ];
 
+const INITIAL_ARTIST = {
+    external_urls: {
+        spotify: '',
+    },
+    followers: {
+        href: null,
+        total: 0,
+    },
+    genres: [] as string[],
+    href: '',
+    id: '',
+    images: [
+        {
+            height: 0,
+            url: '',
+            width: 0,
+        },
+    ],
+    name: '',
+    popularity: 0,
+    type: 'artist',
+    uri: '',
+};
+
+const INITIAL_ARTIST_STATE = {
+    items: [INITIAL_ARTIST],
+    total: 0,
+    limit: 0,
+    offset: 0,
+    href: '',
+    next: '',
+    previous: null,
+};
+
 const Home = () => {
     const [artistsData, setArtistsData] = useState<SpotifyUserArtists | null>(
         null,
     );
     const { user, logout } = useGetUser();
+
+    // ArtistsModal
+    const [isArtistsOpen, setIsArtistsOpen] = useState<boolean>(false);
+    const [isArtistsData, setIsArtistsData] =
+        useState<SpotifyUserArtists>(INITIAL_ARTIST_STATE);
 
     useEffect(() => {
         const fetchArtists = async () => {
@@ -74,10 +114,42 @@ const Home = () => {
         fetchArtists();
     }, []);
 
+    const handleArtistsModal = (artist: SpotifyUserArtists['items'][0]) => {
+        setIsArtistsOpen(true);
+        setIsArtistsData({
+            items: [
+                {
+                    external_urls: artist.external_urls,
+                    followers: artist.followers,
+                    genres: artist.genres,
+                    href: artist.href,
+                    id: artist.id,
+                    images: artist.images,
+                    name: artist.name,
+                    popularity: artist.popularity,
+                    type: artist.type,
+                    uri: artist.uri,
+                },
+            ],
+            total: 1,
+            limit: 1,
+            offset: 0,
+            href: artist.href,
+            next: '',
+            previous: null,
+        });
+    };
+
     if (!user) return <AuthenticationModal />;
 
     return (
         <>
+            <ArtistsModal
+                isOpen={isArtistsOpen}
+                onClose={() => setIsArtistsOpen(false)}
+                artists={isArtistsData}
+            />
+
             <div className='relative min-h-screen bg-gradient-to-br from-zinc-900 via-black to-zinc-900'>
                 <ScrollArea className='h-[calc(100vh-80px)]'>
                     {/* 80px for player height */}
@@ -159,10 +231,15 @@ const Home = () => {
                                                             </p>
                                                         </div>
                                                         <button
+                                                            onClick={() =>
+                                                                handleArtistsModal(
+                                                                    artist,
+                                                                )
+                                                            }
                                                             className='px-6 py-2 rounded-full bg-green-500 hover:bg-green-400
-                text-black font-medium text-sm transition-colors'
+                text-black font-medium text-sm transition-colors cursor-pointer'
                                                         >
-                                                            ติดตาม
+                                                            ดูโปรไฟล์
                                                         </button>
                                                     </div>
 
