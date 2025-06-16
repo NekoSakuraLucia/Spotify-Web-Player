@@ -85,20 +85,7 @@ const Home = () => {
     const handleArtistsModal = (artist: SpotifyUserArtists['items'][0]) => {
         setIsArtistsOpen(true);
         setIsArtistsData({
-            items: [
-                {
-                    external_urls: artist.external_urls,
-                    followers: artist.followers,
-                    genres: artist.genres,
-                    href: artist.href,
-                    id: artist.id,
-                    images: artist.images,
-                    name: artist.name,
-                    popularity: artist.popularity,
-                    type: artist.type,
-                    uri: artist.uri,
-                },
-            ],
+            items: [artist],
             total: 1,
             limit: 1,
             offset: 0,
