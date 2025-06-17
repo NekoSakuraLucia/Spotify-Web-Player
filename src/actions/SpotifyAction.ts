@@ -24,7 +24,11 @@ export async function TopArtists(): Promise<
         );
 
         const ArtistsData = response.data;
-        return { success: true, result: ArtistsData };
+        if (ArtistsData.items.length > 0) {
+            return { success: true, result: ArtistsData };
+        }
+
+        return { success: false, message: 'ไม่พบศิลปินยอดนิยมของคุณ' };
     } catch (error) {
         if (axios.isAxiosError(error) && error.response) {
             const ErrorMessage = (error.response.data as AxiosError).message;
