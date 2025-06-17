@@ -53,7 +53,7 @@ const ArtistsModal = ({ isOpen, onClose, artists }: ArtistsModalProps) => {
                         </div>
                     </div>
 
-                    <div className='p-4 w-full flex flex-col items-start justify-center md:flex-row md:items-center md:justify-between'>
+                    <div className='mb-2 p-4 w-full flex flex-col items-start justify-center sm:flex-row sm:items-center sm:justify-between'>
                         <div className='flex items-center gap-12 mb-5 md:mb-0'>
                             <div className='flex flex-col space-y-2.5'>
                                 <h3 className='text-lg font-bold'>Followers</h3>
@@ -72,12 +72,46 @@ const ArtistsModal = ({ isOpen, onClose, artists }: ArtistsModalProps) => {
                         </div>
 
                         <button
-                            className='px-6 py-2 rounded-full bg-zinc-900 hover:bg-zinc-800
+                            className='max-[639px]:hidden px-6 py-2 rounded-full bg-zinc-900 hover:bg-zinc-800
                 text-white font-medium text-sm transition-colors cursor-pointer'
                         >
                             ติดตาม
                         </button>
                     </div>
+
+                    {artists.items[0].genres.length > 0 && (
+                        <div className='px-4 pb-4'>
+                            <h3 className='text-lg font-bold mb-3'>Genres</h3>
+                            <motion.div
+                                className='flex flex-wrap gap-2'
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                                transition={{ duration: 0.45 }}
+                            >
+                                {artists.items[0].genres.map((genre, index) => (
+                                    <motion.span
+                                        key={genre}
+                                        initial={{ opacity: 0, scale: 0.8 }}
+                                        animate={{ opacity: 1, scale: 1 }}
+                                        transition={{
+                                            delay: 0.3 + index * 0.1,
+                                            type: 'spring',
+                                            stiffness: 300,
+                                        }}
+                                        className='px-3 py-1.5 rounded-full text-sm font-medium
+                                bg-neutral-800/50 hover:bg-neutral-700/50
+                                text-neutral-300 hover:text-white
+                                border border-neutral-700/50
+                                transition-all duration-200
+                                cursor-default'
+                                    >
+                                        {genre.charAt(0).toUpperCase() +
+                                            genre.slice(1)}
+                                    </motion.span>
+                                ))}
+                            </motion.div>
+                        </div>
+                    )}
                 </motion.div>
             </div>
         </>
