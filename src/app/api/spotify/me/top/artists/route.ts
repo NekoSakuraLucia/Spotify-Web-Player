@@ -17,6 +17,10 @@ import { getArtistsErorr } from '@/error/GetArtists.error';
 // Types
 import type { IResponse } from '@/types/spotify';
 import type { SpotifyUserArtists } from '@/types/spotify_artists';
+import type { QueryParamValue } from '@/lib/players/QueryString.api.artists';
+
+// ประเภทสำหรับใช้ในอ็อบเจกต์ queryParam สำหรับ การส่งพารามิเตอร์ไปยัง Spotify API
+type SearchParamsKeys = 'limit' | 'offset';
 
 // Cookie Name
 const COOKIES_NAME = process.env.SPOTIFY_CALLBACK_COOKIES as string;
@@ -38,7 +42,7 @@ export async function GET(
         );
     }
 
-    const queryParam = {
+    const queryParam: Record<SearchParamsKeys, QueryParamValue> = {
         limit: limit ? limit : null,
         offset: offset ? offset : null,
     };

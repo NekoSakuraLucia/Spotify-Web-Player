@@ -1,5 +1,5 @@
 // Types
-type QueryParamValue = string | number | null;
+export type QueryParamValue = string | number | null;
 
 // Function
 export function QueryString<Types extends Record<string, QueryParamValue>>(
