@@ -6,6 +6,7 @@ import axios, { AxiosError } from 'axios';
 import type { SpotifyUserArtists } from '@/types/spotify_artists';
 import type { SpotifyDevices } from '@/types/spotify_devices';
 import type { SpotifyCurrentlyFullResponse } from '@/types/spotify_currently_playing';
+import type { SpotifyUserRecentlyPlayed } from '@/types/spotify_recently_played';
 
 // ประเภทของผลลัพธ์ที่ส่งกลับจากฟังก์ชัน
 interface IActionResponse<Types> {
@@ -116,6 +117,39 @@ export async function DevicesPlayer(): Promise<
         return {
             success: false,
             message: 'เกิดข้อผิดพลาดในการดึงข้อมูลอุปกรณ์ กรุณาลองใหม่อีกครั้ง',
+        };
+    }
+}
+
+export async function RecentlyPlayed(): Promise<
+    IActionResponse<SpotifyUserRecentlyPlayed>
+> {
+    try {
+        const response = await axios.get<SpotifyUserRecentlyPlayed>(
+            '/api/spotify/me/recently-played',
+        );
+
+        const recentlyPlayedData = response.data;
+        if (recentlyPlayedData.items.length > 0) {
+            return { success: true, result: recentlyPlayedData };
+        }
+
+        return { success: false, message: 'ไม่พบเพลงที่เพิ่งเล่น' };
+    } catch (error) {
+        if (axios.isAxiosError(error) && error.response) {
+            const ErrorMessage = (error.response.data as AxiosError).message;
+            return { success: false, message: ErrorMessage };
+        } else if (error instanceof Error) {
+            return {
+                success: false,
+                message: `Internal Server Error: ${error.message}`,
+            };
+        }
+
+        return {
+            success: false,
+            message:
+                'เกิดข้อผิดพลาดในการดึงข้อมูลเพลงที่เพิ่งเล่น กรุณาลองใหม่อีกครั้ง',
         };
     }
 }

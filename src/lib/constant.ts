@@ -4,4 +4,5 @@ export const AuthScope = [
     'user-top-read',
     'user-read-currently-playing',
     'user-read-playback-state',
+    'user-read-recently-played',
 ] as const;

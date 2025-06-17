@@ -21,38 +21,13 @@ import { UserProfile } from '@/components/players/spotify/UserProfile';
 import { Currently_Playing } from '@/components/players/spotify/Currently-Playing';
 import { AuthenticationModal } from '@/components/players/spotify/ForceLogin/AuthenticationModal';
 import { ArtistsModal } from '@/components/players/spotify/artists/ArtistsModal';
+import { Recently_Played } from '@/components/players/spotify/Recently-Played';
 
 // Mock
 import { INITIAL_ARTIST_STATE } from '@/mock/INITIAL_ARTIST.mock';
 
-// Icon
-import { PlayIcon } from 'lucide-react';
-
-// Types
+// Type
 import type { SpotifyUserArtists } from '@/types/spotify_artists';
-
-interface PlaylistItem {
-    id: string;
-    name: string;
-    artist: string;
-    imageUrl: string;
-}
-
-const MOCK_PLAYLISTS: PlaylistItem[] = [
-    {
-        id: '1',
-        name: 'Discover Weekly',
-        artist: 'Spotify',
-        imageUrl: 'https://placehold.co/300/',
-    },
-    {
-        id: '2',
-        name: 'Daily Mix 1',
-        artist: 'Spotify',
-        imageUrl: 'https://placehold.co/300/',
-    },
-    // Add more mock data as needed
-];
 
 const Home = () => {
     const [artistsData, setArtistsData] = useState<SpotifyUserArtists | null>(
@@ -261,39 +236,7 @@ const Home = () => {
                         )}
 
                         {/* Recently Played Section */}
-                        <section className='mb-8'>
-                            <h2 className='text-2xl font-bold text-zinc-100 mb-6'>
-                                Recently played
-                            </h2>
-                            <div className='grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-7 gap-4'>
-                                {MOCK_PLAYLISTS.map((playlist) => (
-                                    <div
-                                        key={playlist.id}
-                                        className='group relative bg-zinc-900/50 rounded-lg p-3 hover:bg-zinc-800/50 transition-all duration-300'
-                                    >
-                                        <div className='relative aspect-square rounded-lg overflow-hidden mb-3'>
-                                            <img
-                                                src={playlist.imageUrl}
-                                                alt={playlist.name}
-                                                className='object-cover w-full h-full group-hover:scale-105 transition-all duration-300'
-                                            />
-                                            <div className='absolute inset-0 bg-black/20 group-hover:bg-black/40 transition-colors' />
-                                            <button className='absolute right-2 bottom-2 opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300'>
-                                                <div className='p-2 rounded-full bg-green-500 hover:bg-green-400 shadow-xl'>
-                                                    <PlayIcon className='h-5 w-5 text-black' />
-                                                </div>
-                                            </button>
-                                        </div>
-                                        <h3 className='font-medium text-zinc-100 group-hover:text-green-400'>
-                                            {playlist.name}
-                                        </h3>
-                                        <p className='text-sm text-zinc-400'>
-                                            {playlist.artist}
-                                        </p>
-                                    </div>
-                                ))}
-                            </div>
-                        </section>
+                        <Recently_Played />
                     </div>
                 </ScrollArea>
 
