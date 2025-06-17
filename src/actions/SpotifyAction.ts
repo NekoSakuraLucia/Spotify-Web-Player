@@ -126,7 +126,7 @@ export async function RecentlyPlayed(): Promise<
 > {
     try {
         const response = await axios.get<SpotifyUserRecentlyPlayed>(
-            '/api/spotify/me/recently-played',
+            '/api/spotify/me/recently-played?limit=5',
         );
 
         const recentlyPlayedData = response.data;
