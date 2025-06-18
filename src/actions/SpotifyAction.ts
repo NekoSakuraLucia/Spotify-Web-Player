@@ -21,7 +21,7 @@ export async function TopArtists(): Promise<
 > {
     try {
         const response = await axios.get<SpotifyUserArtists>(
-            '/api/spotify/me/top/artists?limit=3',
+            '/api/spotify/me/top/artists?limit=4',
         );
 
         const ArtistsData = response.data;
