@@ -38,7 +38,7 @@ const Recently_Played = () => {
     if (!recentlyPlayed)
         return (
             <div className='grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-7 gap-4'>
-                {Array.from([1, 2, 3, 4, 5]).map((_, index) => (
+                {Array.from({ length: 5 }).map((_, index) => (
                     <div
                         key={index + 1}
                         className='bg-zinc-900/50 rounded-lg p-3 animate-pulse'
