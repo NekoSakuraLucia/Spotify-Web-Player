@@ -27,7 +27,7 @@ export interface CurrentlyContext {
 // ประเภทสำหรับแสดงข้อมูลเพลงที่เล่นอยู่
 export interface CurrentlyItem {
     album: CurrentlyAlbum;
-    artists: CurrentlyItemArtist[];
+    artists: ArtistInfo[];
     available_markets: string[];
     disc_number: number;
     duration_ms: number;
@@ -48,7 +48,7 @@ export interface CurrentlyItem {
 // ประเภทสำหรับข้อมูลอัลบั้มที่เล่นอยู่
 export interface CurrentlyAlbum {
     album_type: string;
-    artists: CurrentlyAlbumArtist[];
+    artists: ArtistInfo[];
     available_markets: string[];
     external_urls: CurrentlyExternalUrls;
     href: string;
@@ -62,18 +62,8 @@ export interface CurrentlyAlbum {
     uri: string;
 }
 
-// ประเภทสำหรับศิลปินของอัลบั้มที่เล่นอยู่
-export interface CurrentlyAlbumArtist {
-    external_urls: CurrentlyExternalUrls;
-    href: string;
-    id: string;
-    name: string;
-    type: string;
-    uri: string;
-}
-
-// ประเภทสำหรับศิลปินของเพลงที่เล่นอยู่
-export interface CurrentlyItemArtist {
+// ประเภทศิลปินที่ใช้ร่วมกันได้ทั้งเพลงและอัลบั้ม
+export interface ArtistInfo {
     external_urls: CurrentlyExternalUrls;
     href: string;
     id: string;
