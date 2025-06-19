@@ -1,11 +1,15 @@
 // Next
 import type { Metadata } from 'next';
 import { Geist, Geist_Mono } from 'next/font/google';
-
+import { cookies } from 'next/headers';
 // CSS
 import './globals.css';
+
+// toastify
+import { ToastContainer, Slide } from 'react-toastify';
+
+// Context
 import { UserProvider } from '@/context/userContextProvider';
-import { cookies } from 'next/headers';
 
 const geistSans = Geist({
     variable: '--font-geist-sans',
@@ -39,6 +43,7 @@ export default async function RootLayout({
                 className={`${geistSans.variable} ${geistMono.variable} antialiased`}
             >
                 <UserProvider tokenValue={token}>{children}</UserProvider>
+                <ToastContainer position='bottom-right' transition={Slide} theme='dark' />
             </body>
         </html>
     );
