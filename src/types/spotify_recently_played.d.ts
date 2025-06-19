@@ -9,7 +9,7 @@ export interface SpotifyUserRecentlyPlayed {
 export interface RecentlyPlayedItem {
     track: RecentlyPlayedTrack;
     played_at: string;
-    context: unknown;
+    context: RecentlyPlayedContext;
 }
 
 export interface RecentlyPlayedTrack {
@@ -69,6 +69,13 @@ export interface RecentlyPlayedImage {
 
 export interface RecentlyPlayedExternalIds {
     isrc: string;
+}
+
+export interface RecentlyPlayedContext {
+    type: string;
+    href: string;
+    external_urls: RecentlyPlayedExternalUrls;
+    uri: string;
 }
 
 export interface RecentlyPlayedCursors {
