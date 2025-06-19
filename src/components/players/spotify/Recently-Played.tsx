@@ -9,6 +9,9 @@ import { PlayIcon } from 'lucide-react';
 // Action
 import { RecentlyPlayed } from '@/actions/SpotifyAction';
 
+// Lib
+import { handleApiErrorFetch } from '@/lib/handleApiErrorFetch';
+
 // Types
 import type { SpotifyUserRecentlyPlayed } from '@/types/spotify_recently_played';
 
@@ -25,15 +28,11 @@ const Recently_Played = () => {
         }
 
         setRecentlyPlayed(null);
-        const errorMessage = response.success
-            ? 'ไม่พบข้อมูลเพลงที่เล่นล่าสุด'
-            : `เกิดข้อผิดพลาดในการดึงข้อมูลเพลงที่เล่นล่าสุด: ${response.message}`;
-        console.log(errorMessage);
         return false;
     };
 
     useEffect(() => {
-        fetchRecentlyPlayed();
+        handleApiErrorFetch(fetchRecentlyPlayed, 'ไม่พบข้อมูลเพลงที่เพิ่งเล่น');
     }, []);
 
     if (!recentlyPlayed)

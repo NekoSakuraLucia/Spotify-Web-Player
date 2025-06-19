@@ -36,10 +36,6 @@ const Currently_Playing = () => {
         }
 
         setCurrentlyPlaying(null);
-        const errorMessage = result.success
-            ? 'ไม่พบข้อมูลเพลงที่กำลังเล่น'
-            : `เกิดข้อผิดพลาดในการดึงข้อมูลเพลงที่กำลังเล่น: ${result.message}`;
-        console.log(errorMessage);
         return false;
     };
 

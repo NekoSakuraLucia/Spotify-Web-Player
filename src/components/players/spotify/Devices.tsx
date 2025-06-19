@@ -5,6 +5,9 @@ import React, { useEffect, useState } from 'react';
 // Action
 import { DevicesPlayer } from '@/actions/SpotifyAction';
 
+// Lib
+import { handleApiErrorFetch } from '@/lib/handleApiErrorFetch';
+
 // Icon
 import {
     Monitor,
@@ -49,20 +52,18 @@ const Devices = () => {
         }
 
         setDevicesData(null);
-        const errorMessage = result.success
-            ? 'ไม่พบข้อมูลอุปกรณ์'
-            : `เกิดข้อผิดพลาดในการดึงข้อมูลอุปกรณ์: ${result.message}`;
-        console.log(errorMessage);
         return false;
     };
 
     useEffect(() => {
-        fetchDevices();
+        handleApiErrorFetch(fetchDevices, 'ไม่พบอุปกรณ์ Spotify กรุณาเปิดก่อน');
     }, []);
+
+    if (!devices) return null;
 
     return (
         <>
-            {devices && devices.devices.length > 0 && (
+            {devices.devices.length > 0 && (
                 <div className='w-80'>
                     <div className='space-y-3'>
                         {devices.devices.map((device) => (

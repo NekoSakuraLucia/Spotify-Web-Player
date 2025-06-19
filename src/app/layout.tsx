@@ -43,7 +43,11 @@ export default async function RootLayout({
                 className={`${geistSans.variable} ${geistMono.variable} antialiased`}
             >
                 <UserProvider tokenValue={token}>{children}</UserProvider>
-                <ToastContainer position='bottom-right' transition={Slide} theme='dark' />
+                <ToastContainer
+                    position='bottom-right'
+                    transition={Slide}
+                    theme='dark'
+                />
             </body>
         </html>
     );

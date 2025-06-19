@@ -9,6 +9,9 @@ import { useGetUser } from '@/context/userContext';
 // Action
 import { TopArtists } from '@/actions/SpotifyAction';
 
+// Lib
+import { handleApiErrorFetch } from '@/lib/handleApiErrorFetch';
+
 // shadcn/ui components
 import { ScrollArea } from '@/components/ui/scroll-area';
 import {
@@ -49,10 +52,6 @@ const Home = () => {
         }
 
         setArtistsData(null);
-        const errorMessage = result.success
-            ? 'ไม่พบข้อมูลศิลปิน'
-            : `เกิดข้อผิดพลาดในการดึงข้อมูลศิลปิน: ${result.message}`;
-        console.log(errorMessage);
         return false;
     };
 
@@ -70,7 +69,7 @@ const Home = () => {
     };
 
     useEffect(() => {
-        fetchArtists();
+        handleApiErrorFetch(fetchArtists, 'ไม่พบข้อมูลศิลปิน');
     }, []);
 
     if (!user) return <AuthenticationModal />;
