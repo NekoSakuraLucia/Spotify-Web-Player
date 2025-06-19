@@ -40,22 +40,21 @@ const Home = () => {
     const [isArtistsData, setIsArtistsData] =
         useState<SpotifyUserArtists>(INITIAL_ARTIST_STATE);
 
-    useEffect(() => {
-        const fetchArtists = async () => {
-            const result = await TopArtists();
-            if (result.success && result.result) {
-                setArtistsData(result.result);
-            } else {
-                setArtistsData(null);
-                const errorMessage = result.success
-                    ? 'ไม่พบข้อมูลศิลปิน'
-                    : `เกิดข้อผิดพลาดในการดึงข้อมูลศิลปิน: ${result.message}`;
-                console.log(errorMessage);
-            }
-        };
+    const fetchArtists = async (): Promise<boolean> => {
+        const result = await TopArtists();
 
-        fetchArtists();
-    }, []);
+        if (result.success && result.result) {
+            setArtistsData(result.result);
+            return true;
+        }
+
+        setArtistsData(null);
+        const errorMessage = result.success
+            ? 'ไม่พบข้อมูลศิลปิน'
+            : `เกิดข้อผิดพลาดในการดึงข้อมูลศิลปิน: ${result.message}`;
+        console.log(errorMessage);
+        return false;
+    };
 
     const handleArtistsModal = (artist: SpotifyUserArtists['items'][0]) => {
         setIsArtistsOpen(true);
@@ -69,6 +68,10 @@ const Home = () => {
             previous: null,
         });
     };
+
+    useEffect(() => {
+        fetchArtists();
+    }, []);
 
     if (!user) return <AuthenticationModal />;
 

@@ -25,24 +25,23 @@ import type { SpotifyCurrentlyFullResponse } from '@/types/spotify_currently_pla
 const Currently_Playing = () => {
     const [currentlyPlaying, setCurrentlyPlaying] =
         useState<SpotifyCurrentlyFullResponse | null>(null);
-    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 
-    useEffect(() => {
-        const fetchCurrentlyPlaying = async () => {
-            const result = await CurrentlyPlaying();
-            if (result.success && result.result) {
-                setCurrentlyPlaying(result.result);
-            } else {
-                setCurrentlyPlaying(null);
-                const errorMessage = result.success
-                    ? 'ไม่พบข้อมูลเพลงที่กำลังเล่น'
-                    : `เกิดข้อผิดพลาดในการดึงข้อมูลเพลงที่กำลังเล่น: ${result.message}`;
-                console.log(errorMessage);
-            }
-        };
+    const fetchCurrentlyPlaying = async (): Promise<boolean> => {
+        const result = await CurrentlyPlaying();
 
-        fetchCurrentlyPlaying();
-    }, []);
+        if (result.success && result.result) {
+            setCurrentlyPlaying(result.result);
+            return true;
+        }
+
+        setCurrentlyPlaying(null);
+        const errorMessage = result.success
+            ? 'ไม่พบข้อมูลเพลงที่กำลังเล่น'
+            : `เกิดข้อผิดพลาดในการดึงข้อมูลเพลงที่กำลังเล่น: ${result.message}`;
+        console.log(errorMessage);
+        return false;
+    };
 
     function msToTime(value: number): string {
         const totalSeconds = Math.floor(value / 1000);
@@ -54,6 +53,10 @@ const Currently_Playing = () => {
 
         return `${mm}:${ss}`;
     }
+
+    useEffect(() => {
+        fetchCurrentlyPlaying();
+    }, []);
 
     if (!currentlyPlaying) return null;
     const progress =

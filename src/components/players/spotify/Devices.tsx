@@ -40,20 +40,23 @@ const getDeviceVolume = (vol: number): React.JSX.Element => {
 const Devices = () => {
     const [devices, setDevicesData] = useState<SpotifyDevices | null>(null);
 
-    useEffect(() => {
-        const fetchDevices = async () => {
-            const result = await DevicesPlayer();
-            if (result.success && result.result) {
-                setDevicesData(result.result);
-            } else {
-                setDevicesData(null);
-                const errorMessage = result.success
-                    ? 'ไม่พบข้อมูลอุปกรณ์'
-                    : `เกิดข้อผิดพลาดในการดึงข้อมูลอุปกรณ์: ${result.message}`;
-                console.log(errorMessage);
-            }
-        };
+    const fetchDevices = async (): Promise<boolean> => {
+        const result = await DevicesPlayer();
 
+        if (result.success && result.result) {
+            setDevicesData(result.result);
+            return true;
+        }
+
+        setDevicesData(null);
+        const errorMessage = result.success
+            ? 'ไม่พบข้อมูลอุปกรณ์'
+            : `เกิดข้อผิดพลาดในการดึงข้อมูลอุปกรณ์: ${result.message}`;
+        console.log(errorMessage);
+        return false;
+    };
+
+    useEffect(() => {
         fetchDevices();
     }, []);
 

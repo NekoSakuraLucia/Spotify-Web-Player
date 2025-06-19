@@ -16,20 +16,23 @@ const Recently_Played = () => {
     const [recentlyPlayed, setRecentlyPlayed] =
         useState<SpotifyUserRecentlyPlayed | null>(null);
 
-    useEffect(() => {
-        const fetchRecentlyPlayed = async () => {
-            const response = await RecentlyPlayed();
-            if (response.success && response.result) {
-                setRecentlyPlayed(response.result);
-            } else {
-                setRecentlyPlayed(null);
-                const errorMessage = response.success
-                    ? 'ไม่พบข้อมูลเพลงที่เพิ่งเล่น'
-                    : `เกิดข้อผิดพลาดในการดึงข้อมูลเพลงที่เล่นล่าสุด: ${response.message}`;
-                console.log(errorMessage)
-            }
-        };
+    const fetchRecentlyPlayed = async (): Promise<boolean> => {
+        const response = await RecentlyPlayed();
 
+        if (response.success && response.result) {
+            setRecentlyPlayed(response.result);
+            return true;
+        }
+
+        setRecentlyPlayed(null);
+        const errorMessage = response.success
+            ? 'ไม่พบข้อมูลเพลงที่เล่นล่าสุด'
+            : `เกิดข้อผิดพลาดในการดึงข้อมูลเพลงที่เล่นล่าสุด: ${response.message}`;
+        console.log(errorMessage);
+        return false;
+    };
+
+    useEffect(() => {
         fetchRecentlyPlayed();
     }, []);
 

@@ -65,7 +65,10 @@ export async function CurrentlyPlaying(): Promise<
             return { success: true, result: PlayingData };
         }
 
-        return { success: false, message: 'ไม่พบเพลงที่กำลังเล่นในขณะนี้' };
+        return {
+            success: false,
+            message: 'ไม่พบเพลงที่กำลังเล่นอยู่ในขณะนี้',
+        };
     } catch (error) {
         if (axios.isAxiosError(error) && error.response) {
             const ErrorMessage = (error.response.data as AxiosError).message;
