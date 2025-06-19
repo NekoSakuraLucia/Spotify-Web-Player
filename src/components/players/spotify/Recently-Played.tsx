@@ -15,7 +15,6 @@ import type { SpotifyUserRecentlyPlayed } from '@/types/spotify_recently_played'
 const Recently_Played = () => {
     const [recentlyPlayed, setRecentlyPlayed] =
         useState<SpotifyUserRecentlyPlayed | null>(null);
-    const [error, setError] = useState<string>('');
 
     useEffect(() => {
         const fetchRecentlyPlayed = async () => {
@@ -27,14 +26,13 @@ const Recently_Played = () => {
                 const errorMessage = response.success
                     ? 'ไม่พบข้อมูลเพลงที่เพิ่งเล่น'
                     : `เกิดข้อผิดพลาดในการดึงข้อมูลเพลงที่เล่นล่าสุด: ${response.message}`;
-                setError(errorMessage);
+                console.log(errorMessage)
             }
         };
 
         fetchRecentlyPlayed();
     }, []);
 
-    if (error) return <div className='text-red-500'>{error}</div>;
     if (!recentlyPlayed)
         return (
             <div className='grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-7 gap-4'>
