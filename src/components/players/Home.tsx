@@ -69,8 +69,9 @@ const Home = () => {
     };
 
     useEffect(() => {
+        if (!user) return;
         handleApiErrorFetch(fetchArtists, 'ไม่พบข้อมูลศิลปิน');
-    }, []);
+    }, [user]);
 
     if (!user) return <AuthenticationModal />;
 
