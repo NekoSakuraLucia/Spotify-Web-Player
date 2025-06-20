@@ -12,7 +12,8 @@ import { base_uri } from '@/lib/base.api';
 import { getUserError } from '@/error/GetUser.error';
 
 // Type
-import type { IResponse, SpotifyUserProfile } from '@/types/spotify';
+import type { IResponse } from '@/types/spotify';
+import type { SpotifyUserProfile } from '@/types/spotify_user_profile'
 
 // Cookie Name
 const COOKIES_NAME = process.env.SPOTIFY_CALLBACK_COOKIES as string;

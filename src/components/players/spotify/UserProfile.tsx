@@ -9,7 +9,7 @@ import { LogOut, ChevronDown } from 'lucide-react';
 import { FaSpotify } from 'react-icons/fa';
 
 // Types
-import type { SpotifyUserProfile } from '@/types/spotify';
+import type { SpotifyUserProfile } from '@/types/spotify_user_profile';
 
 interface UserProfileProps {
     user: SpotifyUserProfile;
@@ -40,7 +40,7 @@ const UserProfile = ({ user, logout }: UserProfileProps) => {
             {/* Profile Button */}
             <button
                 onClick={() => setIsOpen(!isOpen)}
-                className='flex items-center gap-2 p-1 pr-3 rounded-full 
+                className='flex items-center gap-2 p-1 pr-3 rounded-full
                     bg-black/20 hover:bg-black/40 transition-all duration-200'
             >
                 {/* Avatar */}
@@ -62,7 +62,7 @@ const UserProfile = ({ user, logout }: UserProfileProps) => {
                 </span>
 
                 <ChevronDown
-                    className={`w-4 h-4 text-zinc-400 transition-transform duration-200 
+                    className={`w-4 h-4 text-zinc-400 transition-transform duration-200
                         ${isOpen ? 'rotate-180' : ''}`}
                 />
             </button>

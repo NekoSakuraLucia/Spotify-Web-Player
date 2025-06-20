@@ -9,7 +9,7 @@ import axios, { AxiosError } from 'axios';
 import { SpotifyLogout } from '@/actions/CookiesAction';
 
 // Types
-import type { SpotifyUserProfile } from '@/types/spotify';
+import type { SpotifyUserProfile } from '@/types/spotify_user_profile';
 
 export type UserContextProvider = {
     user: SpotifyUserProfile | null;
