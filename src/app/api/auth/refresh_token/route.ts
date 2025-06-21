@@ -38,7 +38,7 @@ export async function GET(): Promise<
         );
     }
 
-    const queryParam = {
+    const queryParam: Record<'grant_type' | 'refresh_token', string> = {
         grant_type: 'refresh_token',
         refresh_token: refresh_token,
     };
