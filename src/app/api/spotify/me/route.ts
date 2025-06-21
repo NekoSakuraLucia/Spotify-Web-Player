@@ -13,7 +13,7 @@ import { getUserError } from '@/error/GetUser.error';
 
 // Type
 import type { IResponse } from '@/types/spotify';
-import type { SpotifyUserProfile } from '@/types/spotify_user_profile'
+import type { SpotifyUserProfile } from '@/types/spotify_user_profile';
 
 // Cookie Name
 const COOKIES_NAME = process.env.SPOTIFY_CALLBACK_COOKIES as string;

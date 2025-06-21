@@ -104,8 +104,9 @@ const Home = () => {
                             <div className='grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-4'>
                                 {!artistsData ? (
                                     <>
-                                        {Array.from({ length: 4 }).fill(0).map(
-                                            (_, index) => (
+                                        {Array.from({ length: 4 })
+                                            .fill(0)
+                                            .map((_, index) => (
                                                 <div
                                                     key={index + 1}
                                                     className='animate-pulse'
@@ -116,8 +117,7 @@ const Home = () => {
                                                     <div className='h-2 w-full bg-neutral-900 mb-2'></div>
                                                     <div className='h-2 w-42 bg-neutral-900'></div>
                                                 </div>
-                                            ),
-                                        )}
+                                            ))}
                                     </>
                                 ) : (
                                     <>
