@@ -9,7 +9,7 @@ import qs from 'querystring';
 import { base_uri } from '@/lib/base.api';
 
 // Type
-import type { IResponse, IResponseData, CallbackParam } from '@/types/spotify';
+import type { IResponse, SpotifyToken, CallbackParam } from '@/types/spotify';
 
 // Client ID
 const CLIENT_ID = process.env.SPOTIFY_CLIENT_ID as string;
@@ -19,6 +19,8 @@ const CLIENT_SECRET = process.env.SPOTIFY_CLIENT_SECRET as string;
 const REDIRECT_URI = process.env.SPOTIFY_REDIRECT_URI as string;
 // Cookies Name
 const COOKIES_NAME = process.env.SPOTIFY_CALLBACK_COOKIES as string;
+const SPOTIFY_REFRESH_TOKEN_COOKIES = process.env
+    .SPOTIFY_REFRESH_TOKEN_COOKIES as string;
 
 export async function GET(
     request: NextRequest,
@@ -40,7 +42,7 @@ export async function GET(
     };
 
     try {
-        const response = await axios.post<IResponseData>(
+        const response = await axios.post<SpotifyToken>(
             `${base_uri.spotify.accounts_uri}/api/token`,
             qs.stringify(queryParam),
             {
@@ -54,7 +56,7 @@ export async function GET(
             },
         );
 
-        const { access_token, expires_in } = response.data;
+        const { access_token, refresh_token, expires_in } = response.data;
         const redirectURL = new URL('/', request.nextUrl.origin);
         const redirectResponse = NextResponse.redirect(redirectURL);
 
@@ -66,9 +68,20 @@ export async function GET(
             sameSite: 'lax',
         });
 
+        redirectResponse.cookies.set(
+            SPOTIFY_REFRESH_TOKEN_COOKIES,
+            refresh_token,
+            {
+                httpOnly: true,
+                secure: process.env.NODE_ENV === 'production',
+                path: '/',
+                maxAge: 30 * 24 * 60 * 60 * 1000,
+                sameSite: 'lax',
+            },
+        );
+
         return redirectResponse;
     } catch (error) {
-        console.error(error);
         return NextResponse.json(
             {
                 message: 'Internal Server Error',
