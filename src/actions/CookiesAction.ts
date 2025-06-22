@@ -17,7 +17,9 @@ export async function SpotifyLogout(): Promise<LogoutResponse> {
     const cookiesStore = await cookies();
 
     try {
-        cookiesStore.delete(COOKIES_NAME);
+        cookiesStore
+            .getAll()
+            .forEach((cookies) => cookiesStore.delete(cookies.name));
         return { success: true };
     } catch (error) {
         const errorMessage =
