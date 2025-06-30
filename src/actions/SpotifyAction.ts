@@ -25,7 +25,7 @@ export async function TopArtists(): Promise<
         );
 
         const ArtistsData = response.data;
-        if (ArtistsData.items.length > 0) {
+        if (Array.isArray(ArtistsData.items) && ArtistsData.items.length > 0) {
             return { success: true, result: ArtistsData };
         }
 
@@ -59,6 +59,8 @@ export async function CurrentlyPlaying(): Promise<
 
         const PlayingData = response.data;
         if (
+            typeof PlayingData.resultPlaying.item === 'object' &&
+            typeof PlayingData.resultPlaying.currently_playing_type === 'string' &&
             PlayingData.resultPlaying.item &&
             PlayingData.resultPlaying.currently_playing_type === 'track'
         ) {
@@ -97,7 +99,7 @@ export async function DevicesPlayer(): Promise<
         );
 
         const devicesData = response.data;
-        if (devicesData.devices.length > 0) {
+        if (Array.isArray(devicesData.devices) && devicesData.devices.length > 0) {
             return { success: true, result: devicesData };
         }
 
@@ -133,7 +135,7 @@ export async function RecentlyPlayed(): Promise<
         );
 
         const recentlyPlayedData = response.data;
-        if (recentlyPlayedData.items.length > 0) {
+        if (Array.isArray(recentlyPlayedData.items) && recentlyPlayedData.items.length > 0) {
             return { success: true, result: recentlyPlayedData };
         }
 
